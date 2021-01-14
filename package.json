@@ -2,7 +2,12 @@
   "name": "ioreel",
   "version": "0.0.1",
   "private": true,
+  "homepage": ".",
   "dependencies": {
+    "@capacitor/android": "2.4.6",
+    "@capacitor/core": "2.4.6",
+    "@ionic-native/core": "^5.30.0",
+    "@ionic-native/sqlite": "^5.30.0",
     "@ionic/react": "^5.0.7",
     "@ionic/react-router": "^5.0.7",
     "@testing-library/jest-dom": "^4.2.4",
@@ -43,5 +48,8 @@
       "last 1 safari version"
     ]
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project",
+  "devDependencies": {
+    "@capacitor/cli": "2.4.6"
+  }
 }
