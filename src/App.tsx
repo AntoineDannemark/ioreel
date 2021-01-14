@@ -85,9 +85,11 @@ const App: React.FC = () => {
     header: string;
     message: string;
   } | null>();
-  const [users, setUsers] = useState<
-    Array<{ id: number; firstname: string; lastname: string }>
-  >();
+  //   const [users, setUsers] = useState<
+  //     Array<{ id: number; firstname: string; lastname: string }>
+  //   >();
+  const [users, setUsers] = useState<Array<any>>();
+
   const [db, setDb] = useState<SQLiteObject | null>(null);
   const [editId, setEditId] = useState<number | null>(null);
 
@@ -98,6 +100,27 @@ const App: React.FC = () => {
   useEffect(() => {
     initDb();
   }, []);
+
+  useEffect(() => {
+    if (db) {
+      db.executeSql("select * from users", [])
+        .then((res) => {
+          let users = [];
+
+          if (res.rows.length > 0) {
+            for (let i = 0; i < res.rows.length; i++) {
+              users.push({
+                id: res.rows.item(i).id,
+                firstname: res.rows.item(i).firstname,
+                lastname: res.rows.item(i).lastname,
+              });
+            }
+          }
+          setUsers(users);
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [db]);
 
   const initDb = (): void => {
     try {
@@ -136,10 +159,20 @@ const App: React.FC = () => {
     }
 
     if (editId) {
-      db!.executeSql(
-        "update users set firstname = ?, lastname = ? where id = ?",
-        [firstname, lastname, editId]
-      );
+      db!
+        .executeSql(
+          "update users set firstname = ?, lastname = ? where id = ?",
+          [firstname, lastname, editId]
+        )
+        .then(() => {
+          setUsers(
+            users?.map((user) => {
+              return user.id === editId
+                ? { id: editId, firstname: firstname, lastname: lastname }
+                : user;
+            })
+          );
+        });
       setEditId(null);
     } else {
       db!
@@ -149,6 +182,7 @@ const App: React.FC = () => {
         ])
         .then((res) => {
           console.log(res);
+          setUsers([...users]);
           handleResetButtonClick();
         })
         .catch((err) => console.log(err));
@@ -164,33 +198,14 @@ const App: React.FC = () => {
   const handleDeleteUser = (id: number): void => {
     db!
       .executeSql("delete from users where id = ?", [id])
-      .then((res) => console.log(res))
+      .then(() => {
+        setUsers(users?.filter((user) => user.id !== id));
+      })
       .catch((err) => console.log(err));
   };
 
   const clearError = () => {
     setError(null);
-  };
-
-  const handleGetUsers = (): void => {
-    db!
-      .executeSql("select * from users", [])
-      .then((res) => {
-        let users = [];
-
-        if (res.rows.length > 0) {
-          for (let i = 0; i < res.rows.length; i++) {
-            console.log(res.rows.item(i));
-            users.push({
-              id: res.rows.item(i).id,
-              firstname: res.rows.item(i).firstname,
-              lastname: res.rows.item(i).lastname,
-            });
-          }
-        }
-        setUsers(users);
-      })
-      .catch((err) => console.log(err));
   };
 
   const handleEditUser = (user: {
@@ -218,9 +233,6 @@ const App: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-          <IonButton onClick={handleGetUsers} disabled={!db}>
-            get users
-          </IonButton>
           <IonGrid>
             <IonRow>
               <IonCol>
