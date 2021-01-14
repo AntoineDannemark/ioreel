@@ -39,7 +39,7 @@
 // );
 
 // export default App;
-import React, { useRef, useState, MouseEvent } from "react";
+import React, { useRef, useState, useEffect, MouseEvent } from "react";
 import {
   IonApp,
   IonItem,
@@ -57,7 +57,7 @@ import {
   IonAlert,
   IonList,
 } from "@ionic/react";
-// import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
+import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
 import { saveOutline, refreshOutline, trashOutline } from "ionicons/icons";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -75,83 +75,98 @@ import "@ionic/react/css/display.css";
 /* Theme variables */
 import "./theme/variables.css";
 
-const dummyUsers = [
-  { firstName: "jean", lastName: "bon" },
-  { firstName: "albert", lastName: "tôt" },
-];
-
 const App: React.FC = () => {
-  //   const [showAlert, setShowAlert] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<string>();
   const [users, setUsers] = useState<
-    Array<{ firstName: string; lastName: string }>
-  >(dummyUsers);
-  //   const [dbInitialized, setDbInitialized] = useState<boolean>(false);
-  //   const [db, setDb] = useState<SQLiteObject>(null)
+    Array<{ firstname: string; lastname: string }>
+  >();
+  const [db, setDb] = useState<SQLiteObject | null>(null);
 
   const firstNameInputRef = useRef<HTMLIonInputElement>(null);
   const lastNameInputRef = useRef<HTMLIonInputElement>(null);
 
-  //   // Init DB at mount
-  //   useEffect(() => {
-  //     effect;
-  //     return () => {
-  //       cleanup;
-  //     };
-  //   }, []);
+  // Init DB at mount
+  useEffect(() => {
+    initDb();
+  }, []);
 
-  //   const initDb = (): void => {
-  //     try {
-  //       SQLite.create({
-  //         name: "data.db",
-  //         location: "default",
-  //       }).then(async (db: SQLiteObject) => {
-  //         try {
-  //           const create = await db.executeSql(
-  //             "create table if not exists danceMoves(name VARCHAR(32))",
-  //             []
-  //           );
-  //           await console.log("Table created/exists. Msg: ", create);
-  //           const insert = await db.executeSql(
-  //             "insert into danceMoves (name) values (?)",
-  //             ["Macarena"]
-  //           );
-  //           await console.log("Inserted Macarena: ", insert);
-  //         } catch (e) {
-  //           console.log("SQL error: ", e);
-  //         }
-  //       });
-  //     } catch (e) {
-  //       setShowAlert(true);
-  //       console.log("please use a device: ", e);
-  //     }
-  //   };
+  const initDb = (): void => {
+    try {
+      SQLite.create({
+        name: "ioreel.db",
+        location: "default",
+      })
+        .then((db: SQLiteObject) => {
+          db.executeSql(
+            "create table if not exists users (id integer primary key autoincrement, firstname VARCHAR(32), lastname VARCHAR(32))",
+            []
+          );
+          return db;
+        })
+        .then((db) => {
+          console.log("no error, set db in the state");
+          setDb(db);
+        })
+        .catch((err) => console.log(err));
+    } catch (e) {
+      setShowAlert(true);
+    }
+  };
 
-  const handleSubmitButtonClick = () => {
-    let firstName = firstNameInputRef.current!.value?.toString(),
-      lastName = lastNameInputRef.current!.value?.toString();
-    if (!firstName || !lastName) {
+  const handleSubmitButtonClick = async () => {
+    let firstname = firstNameInputRef.current!.value?.toString(),
+      lastname = lastNameInputRef.current!.value?.toString();
+    if (!firstname || !lastname) {
       return setError("Please provide a firstname and a lastname");
     }
-    const newUser = {
-      firstName,
-      lastName,
-    };
-    console.log(newUser);
-    setUsers([...users, newUser]);
-    handleResetButtonClick();
+    try {
+      const insert = await db!.executeSql(
+        "insert into users (firstname, lastname) values (?,?)",
+        [firstname, lastname]
+      );
+
+      await console.log("Inserted user: ", insert);
+      handleResetButtonClick();
+    } catch (e) {
+      console.log("SQL error: ", e);
+    }
   };
+
   const handleResetButtonClick = () => {
     firstNameInputRef.current!.value = "";
     lastNameInputRef.current!.value = "";
   };
+
   const handleDeleteUser = (e: MouseEvent) => {
     e.preventDefault();
     console.log(e.currentTarget.id);
   };
+
   const clearError = () => {
     setError("");
   };
+
+  const handleGetUsers = () => {
+    db!
+      .executeSql("select * from users", [])
+      .then((res) => {
+        let users = [];
+
+        if (res.rows.length > 0) {
+          for (let i = 0; i < res.rows.length; i++) {
+            console.log(res.rows.item(i));
+            users.push({
+              firstname: res.rows.item(i).firstname,
+              lastname: res.rows.item(i).lastname,
+            });
+          }
+        }
+        setUsers(users);
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <IonAlert
@@ -166,16 +181,18 @@ const App: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonContent className="ion-padding">
-          {/* <IonButton onClick={initDb}>Init DB</IonButton>
+          <IonButton onClick={handleGetUsers} disabled={!db}>
+            get users
+          </IonButton>
           <IonAlert
             isOpen={showAlert}
             onDidDismiss={() => setShowAlert(false)}
-            header={"Mamma mia!"}
+            header={"DB init error"}
             message={
               "This will only work on a device. Please refer to the README."
             }
             buttons={["OK"]}
-          /> */}
+          />
           <IonGrid>
             <IonRow>
               <IonCol>
@@ -195,7 +212,7 @@ const App: React.FC = () => {
             </IonRow>
             <IonRow>
               <IonCol className="ion-text-left">
-                <IonButton onClick={handleSubmitButtonClick}>
+                <IonButton onClick={handleSubmitButtonClick} disabled={!db}>
                   <IonIcon slot="start" icon={saveOutline} />
                   submit
                 </IonButton>
@@ -211,11 +228,11 @@ const App: React.FC = () => {
           {users && (
             <IonList>
               {users.map((user) => (
-                <IonItem key={`${user.firstName} ${user.lastName}`}>
-                  <IonLabel>{`${user.firstName} ${user.lastName}`}</IonLabel>
+                <IonItem key={`${user.firstname} ${user.lastname}`}>
+                  <IonLabel>{`${user.firstname} ${user.lastname}`}</IonLabel>
                   <IonButton
                     onClick={handleDeleteUser}
-                    id={`${user.firstName} ${user.lastName}`}
+                    id={`${user.firstname} ${user.lastname}`}
                   >
                     <IonIcon icon={trashOutline} />
                   </IonButton>
