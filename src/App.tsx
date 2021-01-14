@@ -77,9 +77,9 @@ import "./theme/variables.css";
 
 const App: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<{ header: string; message: string }>();
   const [users, setUsers] = useState<
-    Array<{ firstname: string; lastname: string }>
+    Array<{ id: number; firstname: string; lastname: string }>
   >();
   const [db, setDb] = useState<SQLiteObject | null>(null);
 
@@ -110,7 +110,10 @@ const App: React.FC = () => {
         })
         .catch((err) => console.log(err));
     } catch (e) {
-      setShowAlert(true);
+      setError({
+        header: "DB Init Error",
+        message: "This will only work on a device. Please refer to the README.",
+      });
     }
   };
 
@@ -118,19 +121,22 @@ const App: React.FC = () => {
     let firstname = firstNameInputRef.current!.value?.toString(),
       lastname = lastNameInputRef.current!.value?.toString();
     if (!firstname || !lastname) {
-      return setError("Please provide a firstname and a lastname");
+      return setError({
+        header: "Form error",
+        message: "Please provide a firstname and a lastname",
+      });
     }
-    try {
-      const insert = await db!.executeSql(
-        "insert into users (firstname, lastname) values (?,?)",
-        [firstname, lastname]
-      );
 
-      await console.log("Inserted user: ", insert);
-      handleResetButtonClick();
-    } catch (e) {
-      console.log("SQL error: ", e);
-    }
+    db!
+      .executeSql("insert into users (firstname, lastname) values (?,?)", [
+        firstname,
+        lastname,
+      ])
+      .then((res) => {
+        console.log(res);
+        handleResetButtonClick();
+      })
+      .catch((err) => console.log(err));
   };
 
   const handleResetButtonClick = () => {
@@ -138,13 +144,15 @@ const App: React.FC = () => {
     lastNameInputRef.current!.value = "";
   };
 
-  const handleDeleteUser = (e: MouseEvent) => {
-    e.preventDefault();
-    console.log(e.currentTarget.id);
+  const handleDeleteUser = (id: number) => {
+    db!
+      .executeSql("delete from users where id = ?", [id])
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   const clearError = () => {
-    setError("");
+    setError(null);
   };
 
   const handleGetUsers = () => {
@@ -157,6 +165,7 @@ const App: React.FC = () => {
           for (let i = 0; i < res.rows.length; i++) {
             console.log(res.rows.item(i));
             users.push({
+              id: res.rows.item(i).id,
               firstname: res.rows.item(i).firstname,
               lastname: res.rows.item(i).lastname,
             });
@@ -171,7 +180,8 @@ const App: React.FC = () => {
     <>
       <IonAlert
         isOpen={!!error}
-        message={error}
+        header={error.header}
+        message={error.message}
         buttons={[{ text: "OK", handler: clearError }]}
       />
       <IonApp>
@@ -184,15 +194,6 @@ const App: React.FC = () => {
           <IonButton onClick={handleGetUsers} disabled={!db}>
             get users
           </IonButton>
-          <IonAlert
-            isOpen={showAlert}
-            onDidDismiss={() => setShowAlert(false)}
-            header={"DB init error"}
-            message={
-              "This will only work on a device. Please refer to the README."
-            }
-            buttons={["OK"]}
-          />
           <IonGrid>
             <IonRow>
               <IonCol>
@@ -228,11 +229,11 @@ const App: React.FC = () => {
           {users && (
             <IonList>
               {users.map((user) => (
-                <IonItem key={`${user.firstname} ${user.lastname}`}>
+                <IonItem key={user.id}>
                   <IonLabel>{`${user.firstname} ${user.lastname}`}</IonLabel>
                   <IonButton
-                    onClick={handleDeleteUser}
-                    id={`${user.firstname} ${user.lastname}`}
+                    onClick={() => handleDeleteUser(user.id)}
+                    disabled={!db}
                   >
                     <IonIcon icon={trashOutline} />
                   </IonButton>
