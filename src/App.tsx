@@ -77,7 +77,10 @@ import "./theme/variables.css";
 
 const App: React.FC = () => {
   const [showAlert, setShowAlert] = useState(false);
-  const [error, setError] = useState<{ header: string; message: string }>();
+  const [error, setError] = useState<{
+    header: string;
+    message: string;
+  } | null>();
   const [users, setUsers] = useState<
     Array<{ id: number; firstname: string; lastname: string }>
   >();
