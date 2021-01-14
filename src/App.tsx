@@ -183,8 +183,8 @@ const App: React.FC = () => {
     <>
       <IonAlert
         isOpen={!!error}
-        header={error.header}
-        message={error.message}
+        header={error!.header}
+        message={error!.message}
         buttons={[{ text: "OK", handler: clearError }]}
       />
       <IonApp>
