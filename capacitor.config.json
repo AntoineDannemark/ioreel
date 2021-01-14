@@ -2,7 +2,7 @@
   "appId": "io.ionic.starter",
   "appName": "ioreel",
   "bundledWebRuntime": false,
-  "npmClient": "yarn",
+  "npmClient": "npm",
   "webDir": "build",
   "plugins": {
     "SplashScreen": {
