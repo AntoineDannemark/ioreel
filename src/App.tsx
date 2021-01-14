@@ -58,7 +58,12 @@ import {
   IonList,
 } from "@ionic/react";
 import { SQLite, SQLiteObject } from "@ionic-native/sqlite";
-import { saveOutline, refreshOutline, trashOutline } from "ionicons/icons";
+import {
+  saveOutline,
+  refreshOutline,
+  trashOutline,
+  create,
+} from "ionicons/icons";
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
 /* Basic CSS for apps built with Ionic */
@@ -76,7 +81,6 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 
 const App: React.FC = () => {
-  const [showAlert, setShowAlert] = useState(false);
   const [error, setError] = useState<{
     header: string;
     message: string;
@@ -85,6 +89,7 @@ const App: React.FC = () => {
     Array<{ id: number; firstname: string; lastname: string }>
   >();
   const [db, setDb] = useState<SQLiteObject | null>(null);
+  const [editId, setEditId] = useState<number | null>(null);
 
   const firstNameInputRef = useRef<HTMLIonInputElement>(null);
   const lastNameInputRef = useRef<HTMLIonInputElement>(null);
@@ -130,24 +135,33 @@ const App: React.FC = () => {
       });
     }
 
-    db!
-      .executeSql("insert into users (firstname, lastname) values (?,?)", [
-        firstname,
-        lastname,
-      ])
-      .then((res) => {
-        console.log(res);
-        handleResetButtonClick();
-      })
-      .catch((err) => console.log(err));
+    if (editId) {
+      db!.executeSql(
+        "update users set firstname = ?, lastname = ? where id = ?",
+        [firstname, lastname, editId]
+      );
+      setEditId(null);
+    } else {
+      db!
+        .executeSql("insert into users (firstname, lastname) values (?,?)", [
+          firstname,
+          lastname,
+        ])
+        .then((res) => {
+          console.log(res);
+          handleResetButtonClick();
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   const handleResetButtonClick = () => {
     firstNameInputRef.current!.value = "";
     lastNameInputRef.current!.value = "";
+    setEditId(null);
   };
 
-  const handleDeleteUser = (id: number) => {
+  const handleDeleteUser = (id: number): void => {
     db!
       .executeSql("delete from users where id = ?", [id])
       .then((res) => console.log(res))
@@ -158,7 +172,7 @@ const App: React.FC = () => {
     setError(null);
   };
 
-  const handleGetUsers = () => {
+  const handleGetUsers = (): void => {
     db!
       .executeSql("select * from users", [])
       .then((res) => {
@@ -179,12 +193,22 @@ const App: React.FC = () => {
       .catch((err) => console.log(err));
   };
 
+  const handleEditUser = (user: {
+    id: number;
+    firstname: string;
+    lastname: string;
+  }): void => {
+    setEditId(user.id);
+    firstNameInputRef.current!.value = user.firstname;
+    lastNameInputRef.current!.value = user.lastname;
+  };
+
   return (
     <>
       <IonAlert
         isOpen={!!error}
-        header={error!.header}
-        message={error!.message}
+        header={error?.header}
+        message={error?.message}
         buttons={[{ text: "OK", handler: clearError }]}
       />
       <IonApp>
@@ -224,7 +248,7 @@ const App: React.FC = () => {
               <IonCol className="ion-text-right">
                 <IonButton onClick={handleResetButtonClick}>
                   <IonIcon slot="start" icon={refreshOutline} />
-                  reset
+                  {editId ? "cancel" : "reset"}
                 </IonButton>
               </IonCol>
             </IonRow>
@@ -234,6 +258,12 @@ const App: React.FC = () => {
               {users.map((user) => (
                 <IonItem key={user.id}>
                   <IonLabel>{`${user.firstname} ${user.lastname}`}</IonLabel>
+                  <IonButton
+                    onClick={() => handleEditUser(user)}
+                    disabled={!db}
+                  >
+                    <IonIcon icon={create} />
+                  </IonButton>
                   <IonButton
                     onClick={() => handleDeleteUser(user.id)}
                     disabled={!db}
