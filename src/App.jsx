@@ -74,7 +74,7 @@ const App = () => {
     return (
             <StateContextProvider value={state}>
                 <DispatchContextProvider value={dispatch}>
-                    <DBContextProvider value={{db, error}}>
+                    <DBContextProvider value={db}>
                         <IonApp>
                             <Router>
                                 <IonRouterOutlet>

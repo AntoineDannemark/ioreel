@@ -1,8 +1,7 @@
 import React , { useState, useContext, useEffect, useRef } from "react";
 import { DispatchContext, StateContext, DBContext } from "../context/Context";
-
 import { actions as tenantActions } from '../store/tenants';
-
+import { IonContent } from "@ionic/react";
 import TenantForm from '../components/TenantForm';
 import TenantsList from '../components/TenantsList';
 
@@ -12,7 +11,7 @@ const Tenants = () => {
     const state = useContext(StateContext);    
     const connect = {
         dispatch: useContext(DispatchContext),
-        db: useContext(DBContext).db,
+        db: useContext(DBContext),
     };
 
     const firstNameInputRef = useRef(null);
@@ -60,7 +59,7 @@ const Tenants = () => {
     }
 
     return (
-        <>
+        <IonContent>
             <TenantForm 
                 onSubmit={handleSubmit} 
                 onReset={handleReset} 
@@ -74,7 +73,7 @@ const Tenants = () => {
                 onEdit={handleEdit} 
                 onDelete={handleDelete}
             />
-        </>
+        </IonContent>
     );
 };
 
