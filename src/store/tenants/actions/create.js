@@ -1,13 +1,20 @@
 import { CREATE, CREATE_SUCCESS, CREATE_ERROR } from '../types';
 
 export default ({firstname, lastname}) => {
-    return async({dispatch, db}) => {
+    return async(dispatch) => {
         dispatch({ type: CREATE });
         try {
-            const res = await db.executeSql("insert into users (firstname, lastname) values (?,?)", [
-                firstname,
-                lastname,
-            ]);
+            const query = "insert into users (firstname, lastname) values (?,?)";
+            let res;
+
+            if (window.db) {
+                res = await window.db.executeSql(query, [
+                    firstname,
+                    lastname,
+                ]);
+            } else if (window.ipc) {
+                window.ipc.send("query", query)
+            }
 
             dispatch({type: CREATE_SUCCESS, payload: {firstname, lastname, id: res.insertId}})
         } catch(e) {

@@ -1,5 +1,5 @@
 import React , { useState, useContext, useEffect, useRef } from "react";
-import { DispatchContext, StateContext, DBContext } from "../context/Context";
+import { DBContext, DispatchContext, StateContext } from "../context/Context";
 import { actions as tenantActions } from '../store/tenants';
 import { IonContent } from "@ionic/react";
 import TenantForm from '../components/TenantForm';
@@ -9,10 +9,8 @@ const Tenants = () => {
     const [editId, setEditId] = useState(null);
     
     const state = useContext(StateContext);    
-    const connect = {
-        dispatch: useContext(DispatchContext),
-        db: useContext(DBContext),
-    };
+    const dispatch = useContext(DispatchContext);
+    const dbReady = useContext(DBContext);
 
     const firstNameInputRef = useRef(null);
     const lastNameInputRef = useRef(null);
@@ -23,9 +21,11 @@ const Tenants = () => {
     }
 
     useEffect(() => {
-        connect.db && !state.tenants.length && tenantActions.fetch()(connect)
+        if (dbReady && !state.tenants.length) {
+            tenantActions.fetch()(dispatch)
+        }        
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[connect.db]);
+    },[dbReady]);
 
     const handleSubmit = () => {
         let tenant = {        
@@ -35,10 +35,10 @@ const Tenants = () => {
         };
         
         if (editId) {
-            tenantActions.update(tenant)(connect)            
+            tenantActions.update(tenant)(dispatch)            
             setEditId(null)
         } else {
-            tenantActions.create(tenant)(connect);
+            tenantActions.create(tenant)(dispatch);
         }
         cleanInputs();
     }
@@ -55,7 +55,7 @@ const Tenants = () => {
     }
 
     const handleDelete = id => {
-        tenantActions.remove(id)(connect)
+        tenantActions.remove(id)(dispatch)
     }
 
     return (
@@ -65,11 +65,11 @@ const Tenants = () => {
                 onReset={handleReset} 
                 editId={editId} 
                 ref={{firstNameInputRef, lastNameInputRef}}
-                db={connect.db} 
+                db={dbReady} 
             />
             <TenantsList 
                 tenants={state.tenants} 
-                db={connect.db} 
+                db={dbReady} 
                 onEdit={handleEdit} 
                 onDelete={handleDelete}
             />

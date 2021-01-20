@@ -1,12 +1,14 @@
 import { FETCH, FETCH_SUCCESS, FETCH_ERROR } from '../types';
 
 export default () => {
-    return async({dispatch, db}) => {
+    return async(dispatch) => {
         dispatch({ type: FETCH });
         try {
             console.log('fetch')
-            const res = await db.executeSql("select * from users", []);
+            const res = await window.db.executeSql("select * from users", []);
             
+            await console.log(res)
+
             let tenants = [];            
             
             if (res.rows.length > 0) {
