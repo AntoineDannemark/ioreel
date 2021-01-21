@@ -58,24 +58,29 @@ ipcMain.on("init-db", (event, arg) => {
         event.reply("init-db-error", err)
     }
 })
+
 ipcMain.handle("query", async(event, arg) => {
-    console.log(arg.query);
+    console.log(arg);
     const result = new Promise(function(resolve, reject) {
         try {
-            db.all(arg.query, arg.params, function(err, rows) {
-                if (err) {
+            db[arg.type](arg.query, arg.params, function(error, rows) {
+                if (error) {
                     resolve ({
-                        lastID: null,
-                        changes: null,
-                        err,
+                        data: {
+                            lastID: null,
+                            changes: null,
+                        },
+                        error,
+                    });
+                } else if(rows) {
+                    resolve({
+                        data: rows,
+                        error: null
                     })
                 } else {
-                    console.log(this);
-                    console.log(rows[0]);
                     resolve ({
-                        InsertId: this.lastID,
-                        changes: this.changes,
-                        err: null,
+                        data: {...this},
+                        error: null,
                     })
                 }
             })

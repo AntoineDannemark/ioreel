@@ -1,39 +1,17 @@
 import { FETCH, FETCH_SUCCESS, FETCH_ERROR } from '../types';
+import { runQuery } from '../../../utils/db';
 
 export default () => {
     return async(dispatch) => {
         dispatch({ type: FETCH });
-        try {
-            const query = "select * from users";
+        
+        const query = "select * from users";
+        const result = await runQuery(query, [], "all")
 
-            let res;
-            
-            if (window.db) {
-                res = await window.db.executeSql(query, []);
-            }
-            
-            if (window.ipc) {
-                res = await window.ipc.invoke("query", {
-                    query, 
-                    params: [],
-                });
-                console.log("RES : ", res)
-            }
-            
-            let tenants = [];            
-            
-            if (res.rows.length > 0) {
-                for (let i = 0; i < res.rows.length; i++) {
-                    tenants.push({
-                        id: res.rows.item(i).id,
-                        firstname: res.rows.item(i).firstname,
-                        lastname: res.rows.item(i).lastname,
-                    });
-                }                
-            }
-            dispatch({type: FETCH_SUCCESS, payload: tenants})
-        } catch(e) {
-            dispatch({type: FETCH_ERROR, payload: e})
+        if (result.error) {
+            return dispatch({type: FETCH_ERROR, payload: result.error})
+        } else {
+            return dispatch({type: FETCH_SUCCESS, payload: result.data})
         }
     }
 }

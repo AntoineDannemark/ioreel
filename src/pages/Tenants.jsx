@@ -1,7 +1,7 @@
 import React , { useState, useContext, useEffect, useRef } from "react";
 import { DBContext, DispatchContext, StateContext } from "../context/Context";
 import { actions as tenantActions } from '../store/tenants';
-import { IonContent } from "@ionic/react";
+import { IonContent, IonButton } from "@ionic/react";
 import TenantForm from '../components/TenantForm';
 import TenantsList from '../components/TenantsList';
 
@@ -58,8 +58,13 @@ const Tenants = () => {
         tenantActions.remove(id)(dispatch)
     }
 
+    const handleFetch = () => {
+        tenantActions.fetch()(dispatch)
+    }
+
     return (
         <IonContent>
+            <IonButton onClick={handleFetch} enabled={dbReady}>{'FETCH'}</IonButton>
             <TenantForm 
                 onSubmit={handleSubmit} 
                 onReset={handleReset} 

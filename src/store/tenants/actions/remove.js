@@ -1,14 +1,20 @@
 import { REMOVE, REMOVE_SUCCESS, REMOVE_ERROR } from '../types';
+import { runQuery } from '../../../utils/db';
 
 export default (id) => {
     return async(dispatch) => {
         dispatch({ type: REMOVE });
-        try {
-            await window.db.executeSql("delete from users where id = ?", [id]);
+        const query = "delete from users where id = ?";
+        const params = [id];
+        const result = await runQuery(query, params, "run");
 
-            dispatch({type: REMOVE_SUCCESS, payload: id})
-        } catch(e) {
-            dispatch({type: REMOVE_ERROR, payload: e})
+        if (result.error) {
+            return dispatch({type: REMOVE_ERROR, payload: result.error})
+        } else  {
+            return dispatch({
+                type: REMOVE_SUCCESS, 
+                payload: id,
+            });
         }
     }
 }

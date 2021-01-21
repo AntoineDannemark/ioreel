@@ -52,11 +52,7 @@ const initDb = (dbReadySetter, errorSetter) => {
                     header: "DB Init Error",
                     message: arg,
                 }); 
-            });
-            ipc.on("query-ok", (event, arg) => {
-                console.log('query OK', arg)
-                console.log(arg);
-            })
+            });         
         } catch (e) {
             errorSetter({
                 header: "DB Init Error",
