@@ -4,11 +4,22 @@ export default () => {
     return async(dispatch) => {
         dispatch({ type: FETCH });
         try {
-            console.log('fetch')
-            const res = await window.db.executeSql("select * from users", []);
-            
-            await console.log(res)
+            const query = "select * from users";
 
+            let res;
+            
+            if (window.db) {
+                res = await window.db.executeSql(query, []);
+            }
+            
+            if (window.ipc) {
+                res = await window.ipc.invoke("query", {
+                    query, 
+                    params: [],
+                });
+                console.log("RES : ", res)
+            }
+            
             let tenants = [];            
             
             if (res.rows.length > 0) {

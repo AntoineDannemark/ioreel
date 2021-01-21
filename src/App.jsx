@@ -39,7 +39,7 @@ const initDb = (dbReadySetter, errorSetter) => {
         try {
             const electron = window.require('electron');
             const ipc = electron.ipcRenderer;
-
+            
             ipc.send("init-db")
             ipc.on("init-db-ok", () => {
                 console.log('[ELECTRON DB INIT SUCCESS] - Sit down and relax!');
@@ -53,7 +53,8 @@ const initDb = (dbReadySetter, errorSetter) => {
                     message: arg,
                 }); 
             });
-            ipc.on("query-ret", (event, arg) => {
+            ipc.on("query-ok", (event, arg) => {
+                console.log('query OK', arg)
                 console.log(arg);
             })
         } catch (e) {

@@ -6,14 +6,23 @@ export default ({firstname, lastname}) => {
         try {
             const query = "insert into users (firstname, lastname) values (?,?)";
             let res;
-
+            
             if (window.db) {
                 res = await window.db.executeSql(query, [
                     firstname,
                     lastname,
                 ]);
-            } else if (window.ipc) {
-                window.ipc.send("query", query)
+            }
+            
+            if (window.ipc) {
+                res = await window.ipc.invoke("query", {
+                    query, 
+                    params: [
+                        firstname,
+                        lastname,
+                    ],
+                });
+                console.log("RES : ", res)
             }
 
             dispatch({type: CREATE_SUCCESS, payload: {firstname, lastname, id: res.insertId}})
