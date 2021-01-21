@@ -14,7 +14,12 @@
 #platforms
 /ios
 /android
-/electron
+!electron
+electron/*
+!electron/src
+electron/src/*
+!electron/src/index.ts
+
 
 # misc
 .DS_Store
