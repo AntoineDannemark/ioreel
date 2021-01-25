@@ -13,7 +13,7 @@ Après la mise en place de l'architecture de base et d'une POC il est prévu de 
 
 ---
 
-Yarn n'est pas supporté actuellement par la plateforme @capacitor-community/electron (https://github.com/capacitor-community/electron/issues/68) et génère des erreurs lors de son ouverture (`npx cap open @capacitor-community/electron`). On reste donc sur npm pour l'instant.
+Yarn n'est pas supporté actuellement par la plateforme [@capacitor-community/electron](https://github.com/capacitor-community/electron/issues/68) et génère des erreurs lors de son ouverture (`npx cap open @capacitor-community/electron`). On reste donc sur npm pour l'instant.
 
 💡 A plusieurs reprises lors de builds nous avons eu des **erreurs liées à des conflits de dépendences**.
 Nous avons pu les résoudres en supprimant le package-lock.json ainsi que les nodes_modules
@@ -25,9 +25,7 @@ rm --Force ./package-lock.json
 npm install
 ```
 
-## Ionic CLI
-
-https://ionicframework.com/docs
+## [Ionic CLI](https://ionicframework.com/docs)
 
 L'installation du CLI Ionic permet notamment la génération d'un starter-template via la commande ionic start.
 
@@ -64,7 +62,7 @@ ionic build
 
 https://capacitorjs.com/
 
-Capacitor est le lien entre l'application web et les fonctionnalités natives, via toute une série de plugins. C'est aussi l'outil qui permet de builder l'application pour les différentes plateformes (hormis PWA). Il est développé par Ionic et est un remplaçant pour Cordova, désormais préconisé en lieu et place de ce dernier. Toutefois Les plugins Cordova sont compatibles et eux-mêmes utilisés par Capacitor. Il n'est pas nécessaire d'installer Capacitor globalement, il est inclus dans les nodes modules (de base avec les versions récentes d'Ionic). On peut lancer les commandes via le CLI Ionic ou npx, au choix:
+Capacitor est le lien entre l'application web et les fonctionnalités natives, via toute une série de plugins. C'est aussi l'outil qui permet de builder l'application pour les différentes plateformes (hormis PWA). Il est développé par Ionic et est un remplaçant pour Cordova, désormais préconisé en lieu et place de ce dernier. Toutefois, Les plugins Cordova sont compatibles et eux-mêmes utilisés par Capacitor. Il n'est pas nécessaire d'installer Capacitor globalement, il est inclus dans les nodes modules (de base avec les versions récentes d'Ionic). On peut lancer les commandes via le CLI Ionic ou npx, au choix:
 
 ```
 // Add a native platform project to your project
@@ -102,11 +100,11 @@ ionic cap open <plateform>
 
 ## SQLite3
 
-Pour les **builds natifs** nous utilisons le plugin **cordova-sqlite-storage** en combinaison avec **@ionic-native/sqlite**. Il conviendra de se renseigner sur d'éventuels problèmes indiqués ici: https://github.com/storesafe/cordova-sqlite-storage#warning-multiple-sqlite-problem-on-multiple-platforms.
+Pour les **builds natifs** nous utilisons le plugin **cordova-sqlite-storage** en combinaison avec **@ionic-native/sqlite**. Il conviendra de se renseigner sur d'éventuels problèmes indiqués [ici](https://github.com/storesafe/cordova-sqlite-storage#warning-multiple-sqlite-problem-on-multiple-platforms). Nous n'avons pas retenu le plugin **capacitor-data-storage-sqlite** car il permet uniquement de stocker des chaînes de caractères sous forme de paires clef-valeur.
 
 Pour **Electron** il faudra installer manuellement sqlite3 dans le dossier electron. Cependant, Electron n'étant pas un environnement node standard, il faudra rebuilder le module pour cette plateforme spécifique via electron-builder. Cela nécessitera quelques opérations préalables, dont l'installation globale de node-gyp, venant elle-même avec ses prérequis (cfr. https://github.com/nodejs/node-gyp).
 
-Sur **Windows**, il faudra installer la version actuelle de **python** depuis https://docs.python.org/3/using/windows.html#the-microsoft-store-package, ainsi que les **windows-build-tools**.
+Sur **Windows**, il faudra installer la version actuelle de **python** disponible [ici](https://docs.python.org/3/using/windows.html#the-microsoft-store-package), ainsi que les **windows-build-tools**.
 
 ```
 npm install --global windows-build-tools
@@ -131,9 +129,9 @@ npm run postinstall
 
 ## Android Studio
 
-Pour faire tourner Android Studio, il faut préalablement installer le dernier JDK (Java Development Kit, disponible ici https://www.oracle.com/java/technologies/javase-downloads.html).
+Pour faire tourner Android Studio, il faut préalablement installer le dernier JDK (Java Development Kit, disponible [ici](https://www.oracle.com/java/technologies/javase-downloads.html).
 
-Ensuite, on peut télécharger Android Studio ici: https://developer.android.com/studio/.
+Ensuite, on peut télécharger Android Studio [ici](https://developer.android.com/studio/).
 
 💡 J'ai eu une mauvaise expérience (Erreur de variables Java non-ajoutées au Path et erreurs d'approbation de certificats) en laissant le dossier d'installation par défaut! (dans _Program Files_, il n'a peut-être pas aimé l'espace dans le chemin du dossier). Sur une autre machine en modifiant le dossier de destination je n'ai plus eu ces erreurs.
 
