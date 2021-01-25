@@ -2,20 +2,14 @@
 
 ## Description du projet
 
----
-
 Solution de gestion locative multi-plateformes avec options de base de données embarquée ou hébergée.
 
 ## Stack technique
-
----
 
 Application Ionic avec React (hooks) et base de données SQLite, pouvant être buildée pour Desktop (Electron - Windows et MacOS), mobile (Android et iOS) et PWA.
 Après la mise en place de l'architecture de base et d'une POC il est prévu de passer au maximum en Typescript.
 
 ## npm 🤜🤛 yarn
-
----
 
 Suite à quelques difficultés rencontrées avec yarn au début de la mise en place du projet, nous utilisons actuellement **npm**. Nous n'excluons toutefois pas d'essayer à nouveau la transition vers yarn.
 
@@ -30,8 +24,6 @@ npm install
 ```
 
 ## Ionic CLI
-
----
 
 https://ionicframework.com/docs
 
@@ -67,8 +59,6 @@ ionic build
 ```
 
 ## Capacitor
-
----
 
 https://capacitorjs.com/
 
@@ -110,15 +100,9 @@ ionic cap open <plateform>
 
 ## SQLite3
 
----
+Pour les **builds natifs** nous utilisons le plugin **cordova-sqlite-storage** en combinaison avec **@ionic-native/sqlite**. Il conviendra de se renseigner sur d'éventuels problèmes indiqués ici: https://github.com/storesafe/cordova-sqlite-storage#warning-multiple-sqlite-problem-on-multiple-platforms.
 
-### Pour les **builds natifs**
-
-Nous utilisons le plugin **cordova-sqlite-storage** en combinaison avec **@ionic-native/sqlite**. Il conviendra de se renseigner sur d'éventuels problèmes indiqués ici: https://github.com/storesafe/cordova-sqlite-storage#warning-multiple-sqlite-problem-on-multiple-platforms.
-
-### Pour **Electron**
-
-Il faudra installer manuellement sqlite3 dans le dossier electron. Cependant, Electron n'étant pas un environnement node standard, il faudra rebuilder le module pour cette plateforme spécifique via electron-builder. Cela nécessitera quelques opérations préalables, dont l'installation globale de node-gyp, venant elle-même avec ses prérequis (cfr. https://github.com/nodejs/node-gyp).
+Pour **Electron** il faudra installer manuellement sqlite3 dans le dossier electron. Cependant, Electron n'étant pas un environnement node standard, il faudra rebuilder le module pour cette plateforme spécifique via electron-builder. Cela nécessitera quelques opérations préalables, dont l'installation globale de node-gyp, venant elle-même avec ses prérequis (cfr. https://github.com/nodejs/node-gyp).
 
 Sur **Windows**, il faudra installer la version actuelle de **python** depuis https://docs.python.org/3/using/windows.html#the-microsoft-store-package, ainsi que les **windows-build-tools**.
 
@@ -144,8 +128,6 @@ npm run postinstall
 ```
 
 ## Android Studio
-
----
 
 Pour faire tourner Android Studio, il faut préalablement installer le dernier JDK (Java Development Kit, disponible ici https://www.oracle.com/java/technologies/javase-downloads.html).
 
