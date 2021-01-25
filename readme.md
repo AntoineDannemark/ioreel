@@ -13,7 +13,7 @@ Après la mise en place de l'architecture de base et d'une POC il est prévu de 
 
 ---
 
-Yarn n'est pas supporté actuellement par la plateforme @capacitor-community/electron (https://github.com/capacitor-community/electron/issues/68) et génère des erreurs lors de son ouverture (npx cap open @capacitor-community/electron). On reste donc sur npm pour l'instant.
+Yarn n'est pas supporté actuellement par la plateforme @capacitor-community/electron (https://github.com/capacitor-community/electron/issues/68) et génère des erreurs lors de son ouverture (`npx cap open @capacitor-community/electron`). On reste donc sur npm pour l'instant.
 
 💡 A plusieurs reprises lors de builds nous avons eu des **erreurs liées à des conflits de dépendences**.
 Nous avons pu les résoudres en supprimant le package-lock.json ainsi que les nodes_modules
