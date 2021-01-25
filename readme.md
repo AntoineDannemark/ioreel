@@ -58,9 +58,7 @@ Il permet de lancer les commandes de build, synchronisation sur les différentes
 ionic build
 ```
 
-## Capacitor
-
-https://capacitorjs.com/
+## [Capacitor](https://capacitorjs.com/)
 
 Capacitor est le lien entre l'application web et les fonctionnalités natives, via toute une série de plugins. C'est aussi l'outil qui permet de builder l'application pour les différentes plateformes (hormis PWA). Il est développé par Ionic et est un remplaçant pour Cordova, désormais préconisé en lieu et place de ce dernier. Toutefois, Les plugins Cordova sont compatibles et eux-mêmes utilisés par Capacitor. Il n'est pas nécessaire d'installer Capacitor globalement, il est inclus dans les nodes modules (de base avec les versions récentes d'Ionic). On peut lancer les commandes via le CLI Ionic ou npx, au choix:
 
@@ -100,11 +98,11 @@ ionic cap open <plateform>
 
 ## SQLite3
 
-Pour les **builds natifs** nous utilisons le plugin **cordova-sqlite-storage** en combinaison avec **@ionic-native/sqlite**. Il conviendra de se renseigner sur d'éventuels problèmes indiqués [ici](https://github.com/storesafe/cordova-sqlite-storage#warning-multiple-sqlite-problem-on-multiple-platforms). Nous n'avons pas retenu le plugin **capacitor-data-storage-sqlite** car il permet uniquement de stocker des chaînes de caractères sous forme de paires clef-valeur.
+Pour les **builds natifs** nous utilisons le plugin [**cordova-sqlite-storage**](https://github.com/storesafe/cordova-sqlite-storage) en combinaison avec [**@ionic-native/sqlite**](https://ionicframework.com/docs/native/sqlite/). Il conviendra de se renseigner sur d'éventuels problèmes [indiqués ici](https://github.com/storesafe/cordova-sqlite-storage#warning-multiple-sqlite-problem-on-multiple-platforms). Nous n'avons pas retenu le plugin [capacitor-data-storage-sqlite](https://github.com/jepiqueau/capacitor-data-storage-sqlite) car il permet uniquement de stocker des chaînes de caractères sous forme de paires clef-valeur.
 
-Pour **Electron** il faudra installer manuellement sqlite3 dans le dossier electron. Cependant, Electron n'étant pas un environnement node standard, il faudra rebuilder le module pour cette plateforme spécifique via electron-builder. Cela nécessitera quelques opérations préalables, dont l'installation globale de node-gyp, venant elle-même avec ses prérequis (cfr. https://github.com/nodejs/node-gyp).
+Pour **Electron** il faudra installer manuellement sqlite3 dans le dossier electron. Cependant, Electron n'étant pas un environnement node standard, il faudra rebuilder le module pour cette plateforme spécifique via electron-builder. Cela nécessitera quelques opérations préalables, dont l'installation globale de [node-gyp](https://github.com/nodejs/node-gyp), venant elle-même avec ses prérequis.
 
-Sur **Windows**, il faudra installer la version actuelle de **python** disponible [ici](https://docs.python.org/3/using/windows.html#the-microsoft-store-package), ainsi que les **windows-build-tools**.
+Sur **Windows**, il faudra installer la [version actuelle de **python**](https://docs.python.org/3/using/windows.html#the-microsoft-store-package), ainsi que les **windows-build-tools**.
 
 ```
 npm install --global windows-build-tools
@@ -129,9 +127,9 @@ npm run postinstall
 
 ## Android Studio
 
-Pour faire tourner Android Studio, il faut préalablement installer le dernier JDK (Java Development Kit, disponible [ici](https://www.oracle.com/java/technologies/javase-downloads.html).
+Pour faire tourner Android Studio, il faut préalablement [installer le dernier JDK](https://www.oracle.com/java/technologies/javase-downloads.html) (Java Development Kit).
 
-Ensuite, on peut télécharger Android Studio [ici](https://developer.android.com/studio/).
+Ensuite, on peut télécharger [Android Studio](https://developer.android.com/studio/).
 
 💡 J'ai eu une mauvaise expérience (Erreur de variables Java non-ajoutées au Path et erreurs d'approbation de certificats) en laissant le dossier d'installation par défaut! (dans _Program Files_, il n'a peut-être pas aimé l'espace dans le chemin du dossier). Sur une autre machine en modifiant le dossier de destination je n'ai plus eu ces erreurs.
 
