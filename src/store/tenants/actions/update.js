@@ -1,10 +1,10 @@
 import { UPDATE, UPDATE_SUCCESS, UPDATE_ERROR } from '../types';
 
 export default ({firstname, lastname, editId}) => {
-    return async({dispatch, db}) => {
+    return async(dispatch) => {
         dispatch({ type: UPDATE });
         try {
-            await db.executeSql("update users set firstname = ?, lastname = ? where id = ?",
+            await window.db.executeSql("update users set firstname = ?, lastname = ? where id = ?",
                 [firstname, lastname, editId]
             );
 

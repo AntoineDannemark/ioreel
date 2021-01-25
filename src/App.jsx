@@ -34,47 +34,74 @@ const Router = isPlatform("electron")
     ? IonReactHashRouter
     : IonReactRouter;
 
-const initDb = (DBsetter, errorSetter) => {
-    try {
-        SQLite.create({
-            name: "ioreel.db",
-            location: "default",
-        })
-        .then(db => {
-            db.executeSql(
-                "create table if not exists users (id integer primary key autoincrement, firstname VARCHAR(32), lastname VARCHAR(32))",
-                []
-            );
-            return db;
-        })
-        .then(db => {
-            console.log("no error, set db in the state");
-            DBsetter(db);
-        })
-        .catch((err) => console.log(err));
-    } catch (e) {
-        errorSetter({
-            header: "DB Init Error",
-            message: "This will only work on a device. Please refer to the README.",
-        });
+const initDb = (dbReadySetter, errorSetter) => {
+    if (isPlatform("electron")) {
+        try {
+            const electron = window.require('electron');
+            const ipc = electron.ipcRenderer;
+            
+            ipc.send("init-db")
+            ipc.on("init-db-ok", () => {
+                console.log('[ELECTRON DB INIT SUCCESS] - Sit down and relax!');
+                window.ipc = ipc;
+                dbReadySetter(true)  
+            });
+            ipc.on("init-db-error", (event, arg) => {
+                console.log('[ELECTRON DB INIT ERROR] - ', arg);
+                errorSetter({
+                    header: "DB Init Error",
+                    message: arg,
+                }); 
+            });         
+        } catch (e) {
+            errorSetter({
+                header: "DB Init Error",
+                message: "This will only work on a device. Please refer to the README.",
+            });
+        }
+    } else {
+        try {
+            SQLite.create({
+                name: "ioreel.db",
+                location: "default",
+            })
+            .then(db => {
+                db.executeSql(
+                    "create table if not exists users (id integer primary key autoincrement, firstname VARCHAR(32), lastname VARCHAR(32))",
+                    []
+                );
+                return db;
+            })
+            .then(db => {
+                console.log("no error, set db in window");
+                window.db = db
+                dbReadySetter(true);
+            })
+            .catch((err) => console.log(err));
+        } catch (e) {
+            errorSetter({
+                header: "DB Init Error",
+                message: "This will only work on a device. Please refer to the README.",
+            });
+        }
     }
-};
+}
 
 const App = () => {
-    const [db, setDb] = useState();
+    const [dbReady, setDbReady] = useState();
     const [error, setError] = useState()
 
     const [state, dispatch] = useReducer(tenantsReducer, tenantsInitialState);
 
     // Init DB at mount
     useEffect(() => {
-        initDb(setDb, setError);
+        initDb(setDbReady, setError);
     }, []);
 
     return (
             <StateContextProvider value={state}>
                 <DispatchContextProvider value={dispatch}>
-                    <DBContextProvider value={db}>
+                    <DBContextProvider value={dbReady}>
                         <IonApp>
                             <Router>
                                 <IonRouterOutlet>
