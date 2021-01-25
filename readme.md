@@ -9,9 +9,11 @@ Solution de gestion locative multi-plateformes avec options de base de données 
 Application Ionic avec React (hooks) et base de données SQLite, pouvant être buildée pour Desktop (Electron - Windows et MacOS), mobile (Android et iOS) et PWA.
 Après la mise en place de l'architecture de base et d'une POC il est prévu de passer au maximum en Typescript.
 
-## npm 🤜🤛 yarn
+## Client NPM
 
-Suite à quelques difficultés rencontrées avec yarn au début de la mise en place du projet, nous utilisons actuellement **npm**. Nous n'excluons toutefois pas d'essayer à nouveau la transition vers yarn.
+---
+
+Yarn n'est pas supporté actuellement par la plateforme @capacitor-community/electron (https://github.com/capacitor-community/electron/issues/68) et génère des erreurs lors de son ouverture (npx cap open @capacitor-community/electron). On reste donc sur npm pour l'instant.
 
 💡 A plusieurs reprises lors de builds nous avons eu des **erreurs liées à des conflits de dépendences**.
 Nous avons pu les résoudres en supprimant le package-lock.json ainsi que les nodes_modules
