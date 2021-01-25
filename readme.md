@@ -20,8 +20,8 @@ Nous avons pu les résoudres en supprimant le package-lock.json ainsi que les no
 puis en réinstallant ces derniers.
 
 ```
-rm -R --Force ./node_modules
-rm --Force ./package-lock.json
+rm -R -Force ./node_modules
+rm -Force ./package-lock.json
 npm install
 ```
 
