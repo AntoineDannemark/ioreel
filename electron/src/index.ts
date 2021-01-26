@@ -66,10 +66,7 @@ ipcMain.handle("query", async(event, arg) => {
             db[arg.type](arg.query, arg.params, function(error, rows) {
                 if (error) {
                     resolve ({
-                        data: {
-                            lastID: null,
-                            changes: null,
-                        },
+                        data: {},
                         error,
                     });
                 } else if(rows) {

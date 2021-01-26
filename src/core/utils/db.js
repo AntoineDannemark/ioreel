@@ -1,7 +1,6 @@
 const extractSQLiteRowsData = (aRows, aFields) => {
     let data = [];
-    
-    if (!aRows.length || !aFields.length) {
+    if (aRows.length < 0 || !aFields.length) {
         return data;
     } else {
         for (let i = 0; i < aRows.length; i++) {
@@ -16,7 +15,26 @@ const extractSQLiteRowsData = (aRows, aFields) => {
     return data;
 }
 
+const extractNativevSQLiteData = (oResponse, aColumns) => {
+    if (oResponse.rows && oResponse.rows.length) {
+        return extractSQLiteRowsData(oResponse.rows, aColumns)
+    } else {
+        return oResponse;
+    }
+}
+
 export const runQuery = async(query, params, type) => {
+    /* Query types:
+        /!\ we should restrict to the minimum 
+        ("CREATE TABLE .." etc. should not be available to the "browser", but run from a file instead)
+
+        SELECT 
+        INSERT
+        DELETE
+        UPDATE
+
+    */
+    
     let result = {
         data: null,
         error: null,
@@ -26,8 +44,10 @@ export const runQuery = async(query, params, type) => {
         // If the native query errors, we go to the catch 
         if (window.db) {
             const res = await window.db.executeSql(query, params);
-
-            result.data = res.rows ? extractSQLiteRowsData(res.rows, ["id", "firstname", "lastname"]) : res;
+            
+            // Here we will have to switch on the query type..
+            // shit code all over the place loool :-(
+            result.data = res.rows.length ? extractSQLiteRowsData(res.rows, ["id", "firstname", "lastname"]) : res;
         // If the electron query errors, it will populate res.error
         } else if (window.ipc) {
             result = await window.ipc.invoke("query", {

@@ -1,5 +1,5 @@
 import { FETCH, FETCH_SUCCESS, FETCH_ERROR } from '../types';
-import { runQuery } from '../../../utils/db';
+import { runQuery } from '../../../core/utils/db';
 
 export default () => {
     return async(dispatch) => {

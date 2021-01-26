@@ -1,5 +1,17 @@
 import { CREATE, CREATE_SUCCESS, CREATE_ERROR } from '../types';
-import { runQuery } from '../../../utils/db';
+import { runQuery } from '../../../core/utils/db';
+
+// smelly code
+const noDataNorId = data => !data || !(data.insertId || data.lastID);
+const getSQLiteDataId = data => {
+    if (noDataNorId(data)) {
+        return null;  
+    } else if (data.lastID) {
+        return data.lastID;
+    } else {
+        return data.insertId
+    }
+}
 
 export default ({firstname, lastname}) => {
     return async(dispatch) => {
@@ -17,11 +29,9 @@ export default ({firstname, lastname}) => {
                 payload: {
                     firstname, 
                     lastname, 
-                    id: result.data.insertId
+                    id: getSQLiteDataId(result.data)
                 }
             });
         }
-
-
     }
 }

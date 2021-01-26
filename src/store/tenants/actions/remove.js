@@ -1,5 +1,5 @@
 import { REMOVE, REMOVE_SUCCESS, REMOVE_ERROR } from '../types';
-import { runQuery } from '../../../utils/db';
+import { runQuery } from '../../../core/utils/db';
 
 export default (id) => {
     return async(dispatch) => {
