@@ -23,7 +23,7 @@ const TenantsList = ({tenants, onEdit, onDelete, db}) => {
         <IonList>
             {tenants.map((tenant) => (
                 <IonItem key={tenant.id}>
-                    <IonLabel>{`${tenant.firstname} ${tenant.lastname}`}</IonLabel>
+                    <IonLabel>{`${tenant.firstname} ${tenant.lastname} - ${tenant.id}`}</IonLabel>
                     <IonButton
                         onClick={() => handleEditButtonClick(tenant)}
                         disabled={!db}
