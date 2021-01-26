@@ -25,9 +25,9 @@ rm -Force ./package-lock.json
 npm install
 ```
 
-## [Ionic CLI](https://ionicframework.com/docs)
+## Ionic CLI
 
-L'installation du CLI Ionic permet notamment la génération d'un starter-template via la commande ionic start.
+L'installation d'[Ionic-CLI](https://ionicframework.com/docs) permet notamment la génération d'un starter-template via la commande ionic start.
 
 Il faut l'installer globalement via npm:
 
@@ -58,9 +58,9 @@ Il permet de lancer les commandes de build, synchronisation sur les différentes
 ionic build
 ```
 
-## [Capacitor](https://capacitorjs.com/)
+## Capacitor
 
-Capacitor est le lien entre l'application web et les fonctionnalités natives, via toute une série de plugins. C'est aussi l'outil qui permet de builder l'application pour les différentes plateformes (hormis PWA). Il est développé par Ionic et est un remplaçant pour Cordova, désormais préconisé en lieu et place de ce dernier. Toutefois, Les plugins Cordova sont compatibles et eux-mêmes utilisés par Capacitor. Il n'est pas nécessaire d'installer Capacitor globalement, il est inclus dans les nodes modules (de base avec les versions récentes d'Ionic). On peut lancer les commandes via le CLI Ionic ou npx, au choix:
+[Capacitor](https://capacitorjs.com/) est le lien entre l'application web et les fonctionnalités natives, via toute une série de plugins. C'est aussi l'outil qui permet de builder l'application pour les différentes plateformes (hormis PWA). Il est développé par Ionic et est un remplaçant pour Cordova, désormais préconisé en lieu et place de ce dernier. Toutefois, Les plugins Cordova sont compatibles et eux-mêmes utilisés par Capacitor. Il n'est pas nécessaire d'installer Capacitor globalement, il est inclus dans les nodes modules (de base avec les versions récentes d'Ionic). On peut lancer les commandes via le CLI Ionic ou npx, au choix:
 
 ```
 // Add a native platform project to your project
