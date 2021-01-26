@@ -16,10 +16,11 @@
 /android
 !electron
 electron/*
+!electron/package.json
+!electron/package-lock.json
 !electron/src
 electron/src/*
 !electron/src/index.ts
-
 
 # misc
 .DS_Store
