@@ -21,7 +21,7 @@ const TenantsList = ({tenants, onEdit, onDelete, db}) => {
 
     return (
         <IonList>
-            {tenants.map((tenant) => (
+            {tenants.length > 0 && tenants.map((tenant) => (
                 <IonItem key={tenant.id}>
                     <IonLabel>{`${tenant.firstname} ${tenant.lastname} - ${tenant.id}`}</IonLabel>
                     <IonButton

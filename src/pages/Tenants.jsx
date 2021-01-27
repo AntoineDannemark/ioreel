@@ -31,10 +31,10 @@ const Tenants = () => {
         let tenant = {        
             firstname: firstNameInputRef.current.value,
             lastname: lastNameInputRef.current.value,
-            editId,
         };
         
         if (editId) {
+            tenant.editId = editId;
             tenantActions.update(tenant)(dispatch)            
             setEditId(null)
         } else {
@@ -73,7 +73,7 @@ const Tenants = () => {
                 db={dbReady} 
             />
             <TenantsList 
-                tenants={state.tenants} 
+                tenants={state.tenants || []} 
                 db={dbReady} 
                 onEdit={handleEdit} 
                 onDelete={handleDelete}

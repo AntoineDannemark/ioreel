@@ -1,15 +1,15 @@
 import React, { useReducer, useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
-import { IonApp, IonRouterOutlet, isPlatform } from "@ionic/react";
+import { IonApp, IonRouterOutlet, isPlatform, getPlatforms } from "@ionic/react";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
+// TODO check if library still needed
+// import { SQLite } from "@ionic-native/sqlite";
 import Tenants from "./pages/Tenants";
 
 import tenantsReducer from "./store/tenants/reducer";
 import { initialState as tenantsInitialState } from "./store/tenants/index";
 import { DispatchContextProvider, StateContextProvider, DBContextProvider } from './context/Context';
-
-import { SQLite } from "@ionic-native/sqlite";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -36,56 +36,23 @@ const Router = isPlatform("electron")
     ? IonReactHashRouter
     : IonReactRouter;
 
-const initDb = (dbReadySetter, errorSetter) => {
-    if (isPlatform("electron")) {
-        try {
-            const electron = window.require('electron');
-            const ipc = electron.ipcRenderer;
-            
-            ipc.send("init-db")
-            ipc.on("init-db-ok", () => {
-                console.log('[ELECTRON DB INIT SUCCESS] - Sit down and relax!');
-                window.ipc = ipc;
-                dbReadySetter(true)  
-            });
-            ipc.on("init-db-error", (event, arg) => {
-                console.log('[ELECTRON DB INIT ERROR] - ', arg);
-                errorSetter({
-                    header: "DB Init Error",
-                    message: arg,
-                }); 
-            });         
-        } catch (e) {
-            errorSetter({
-                header: "DB Init Error",
-                message: "This will only work on a device. Please refer to the README.",
-            });
-        }
-    } else {
-        try {
-            SQLite.create({
-                name: "ioreel.db",
-                location: "default",
-            })
-            .then(db => {
-                db.executeSql(
-                    "create table if not exists users (id integer primary key autoincrement, firstname VARCHAR(32), lastname VARCHAR(32))",
-                    []
-                );
-                return db;
-            })
-            .then(db => {
-                console.log("no error, set db in window");
-                window.db = db
-                dbReadySetter(true);
-            })
-            .catch((err) => console.log(err));
-        } catch (e) {
-            errorSetter({
-                header: "DB Init Error",
-                message: "This will only work on a device. Please refer to the README.",
-            });
-        }
+// TODO extract platform logic 
+const initDb = async(dbReadySetter, errorSetter) => {
+    if (isPlatform("cordova")) {
+        window.api = require('./typeorm/api').api;
+    }
+
+    const res = await window.api.initDB();
+
+    if (res.dbReady) {
+        console.log(`[${getPlatforms()[0]}] - DB Init Success`);
+        dbReadySetter(true)  
+    } else if (res.error) {
+        console.log(`[${getPlatforms()[0]}] - DB Init Error: ${res.error}`);
+        errorSetter({
+            header: `[${getPlatforms()[0]}] - DB Init Error`,
+            message: res.error,
+        }); 
     }
 }
 

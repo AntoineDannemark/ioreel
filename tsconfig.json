@@ -10,7 +10,6 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "node",
@@ -18,7 +17,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strict": false,
   },
   "include": [
     "src"
