@@ -1,8 +1,8 @@
 import { app, ipcMain } from "electron";
 import { createCapacitorElectronApp } from "@capacitor-community/electron";
 
-import { createConnection, getConnection } from 'typeorm';
-const User = require('./typeorm/entities/User');
+// import { createConnection, getConnection } from 'typeorm';
+const {initDB, createTenant, fetchTenants, updateTenant, removeTenant} = require('./db').api
 
 // Enable contextIsolation for security, the API will be exposed through the preloader script
 // See https://www.electronjs.org/docs/tutorial/context-isolation
@@ -43,78 +43,21 @@ app.on("activate", function () {
 
 // Define any IPC or other custom functionality below here
 ipcMain.handle("init-db", async function(event, arg) {
-   return await createConnection({
-        type: "sqlite",
-        database: "ioreel.db",
-        location: "default",
-        logging: ["error", "query", "schema"],
-        synchronize: true,
-        entities: [User],
-    }).then(conn => {
-        return {
-            dbReady: conn.isConnected,
-            error: null,
-        }
-    }).catch(err => {
-        return {
-            dbReady: false,
-            error: err,
-        }
-    })
+    return initDB(arg);
 });     
 
 ipcMain.handle('create-tenant', async(event, tenant) => {
-    return await getConnection()
-        .createQueryBuilder()
-        .insert()
-        .into(User)
-        .values(tenant)
-        .execute()
+    return createTenant(tenant);
 });
 
 ipcMain.handle('fetch-tenants', async() => {
-    return await getConnection()
-        .createQueryBuilder()
-        .select("*")
-        .from(User)
-        .execute()
+    return fetchTenants();
+})
+
+ipcMain.handle('update-tenant', async(event, {id, ...rest}) =>{
+    return updateTenant(id, rest)
 })
 
 ipcMain.handle('remove-tenant', async(event, id) => {
-    return await getConnection()
-        .createQueryBuilder()
-        .softDelete()
-        .from(User)
-        .where("id = :id", { id })
-        .execute();
-})
-
-ipcMain.handle("query", async(event, arg) => {
-    return true;
-    // console.log(arg);
-    // const result = new Promise(function(resolve, reject) {
-    //     try {
-    //         db[arg.type](arg.query, arg.params, function(error, rows) {
-    //             if (error) {
-    //                 resolve ({
-    //                     data: {},
-    //                     error,
-    //                 });
-    //             } else if(rows) {
-    //                 resolve({
-    //                     data: rows,
-    //                     error: null
-    //                 })
-    //             } else {
-    //                 resolve ({
-    //                     data: {...this},
-    //                     error: null,
-    //                 })
-    //             }
-    //         })
-    //     } catch(err) {
-    //         reject(err);
-    //     }
-    // })
-    // return result;
+    return removeTenant(id);
 })
