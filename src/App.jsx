@@ -36,13 +36,25 @@ const Router = isPlatform("electron")
     ? IonReactHashRouter
     : IonReactRouter;
 
+const getDriver = () => {
+    let driver
+
+    if (isPlatform("cordova")) {
+        driver = "cordova"
+        window.api = require('./db').api;
+    } else if (isPlatform("electron")) {
+        driver = "sqlite"
+    }
+    return driver;
+}
+
 // TODO extract platform logic 
 const initDb = async(dbReadySetter, errorSetter) => {
     if (isPlatform("cordova")) {
-        window.api = require('./typeorm/api').api;
+        window.api = require('./db').api;
     }
 
-    const res = await window.api.initDB();
+    const res = await window.api.initDB(getDriver());
 
     if (res.dbReady) {
         console.log(`[${getPlatforms()[0]}] - DB Init Success`);
@@ -68,20 +80,20 @@ const App = () => {
     }, []);
 
     return (
-            <StateContextProvider value={state}>
-                <DispatchContextProvider value={dispatch}>
-                    <DBContextProvider value={dbReady}>
-                        <IonApp>
-                            <Router>
-                                <IonRouterOutlet>
-                                    <Route exact path="/" render={() => <Redirect to="/tenants" />} />
-                                    <Route path="/tenants" component={Tenants} exact={true} />                    
-                                </IonRouterOutlet>
-                            </Router>
-                        </IonApp>
-                    </DBContextProvider>
-                </DispatchContextProvider>
-            </StateContextProvider>
+        <StateContextProvider value={state}>
+            <DispatchContextProvider value={dispatch}>
+                <DBContextProvider value={dbReady}>
+                    <IonApp>
+                        <Router>
+                            <IonRouterOutlet>
+                                <Route exact path="/" render={() => <Redirect to="/tenants" />} />
+                                <Route path="/tenants" component={Tenants} exact={true} />                    
+                            </IonRouterOutlet>
+                        </Router>
+                    </IonApp>
+                </DBContextProvider>
+            </DispatchContextProvider>
+        </StateContextProvider>
     );
 };
 

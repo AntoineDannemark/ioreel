@@ -1,16 +1,14 @@
 import { UPDATE, UPDATE_SUCCESS, UPDATE_ERROR } from '../types';
 
-export default ({firstname, lastname, editId}) => {
+export default (id, data) => {
     return async(dispatch) => {
-        // dispatch({ type: UPDATE });
-        // try {
-        //     await window.db.executeSql("update users set firstname = ?, lastname = ? where id = ?",
-        //         [firstname, lastname, editId]
-        //     );
+        dispatch({ type: UPDATE });
+        try {
+            await window.api.updateTenant(id, data)
 
-        //     dispatch({type: UPDATE_SUCCESS, payload: {firstname, lastname, id: editId}})
-        // } catch(e) {
-        //     dispatch({type: UPDATE_ERROR, payload: e})
-        // }
+            dispatch({type: UPDATE_SUCCESS, payload: { id, ...data }})
+        } catch(e) {
+            dispatch({type: UPDATE_ERROR, payload: e})
+        }
     }
 }

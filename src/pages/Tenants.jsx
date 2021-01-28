@@ -34,8 +34,7 @@ const Tenants = () => {
         };
         
         if (editId) {
-            tenant.editId = editId;
-            tenantActions.update(tenant)(dispatch)            
+            tenantActions.update(editId, tenant)(dispatch)            
             setEditId(null)
         } else {
             tenantActions.create(tenant)(dispatch);
