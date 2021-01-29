@@ -14,15 +14,10 @@
 #platforms
 /ios
 /android
-!electron
-electron/*
-!electron/package.json
-!electron/package-lock.json
-!electron/src
+/electron
 
 # src/db is a separate repo
 /src/db/
-electron/src/db/
 
 # misc
 .DS_Store
