@@ -41,7 +41,6 @@ const getDriver = () => {
 
     if (isPlatform("cordova")) {
         driver = "cordova"
-        window.api = require('./db').api;
     } else if (isPlatform("electron")) {
         driver = "sqlite"
     }
@@ -51,7 +50,7 @@ const getDriver = () => {
 // TODO extract platform logic 
 const initDb = async(dbReadySetter, errorSetter) => {
     if (isPlatform("cordova")) {
-        window.api = require('./db').api;
+        window.api = require('./api').api;
     }
 
     const res = await window.api.initDB(getDriver());
