@@ -17,7 +17,7 @@
 /electron
 
 # src/db is a separate repo
-/src/db/
+/src/api/
 
 # misc
 .DS_Store
