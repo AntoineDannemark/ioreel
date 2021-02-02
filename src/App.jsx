@@ -49,6 +49,7 @@ const getDriver = () => {
 
 // TODO extract platform logic 
 const initDb = async(dbReadySetter, errorSetter) => {
+    if (!isPlatform("cordova") && !isPlatform("electron")) return 
     if (isPlatform("cordova")) {
         window.api = require('./api').api;
     }
