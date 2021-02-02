@@ -14,11 +14,14 @@ const People = () => {
 
     const firstNameInputRef = useRef(null);
     const lastNameInputRef = useRef(null);
+    const birthDateInputRef = useRef(null)
     const birthPlaceInputRef = useRef(null);
 
     const cleanInputs = () => {        
         firstNameInputRef.current.value = '';
         lastNameInputRef.current.value = '';
+        birthDateInputRef.current.value = '';
+        birthPlaceInputRef.current.value = '';
     }
 
     useEffect(() => {
@@ -33,15 +36,17 @@ const People = () => {
             firstname: firstNameInputRef.current.value,
             lastname: lastNameInputRef.current.value,
             birthPlace: birthPlaceInputRef.current.value,
+            birthDate: birthDateInputRef.current.value,
         };
         
-        if (editId) {
-            peopleActions.update(editId, people)(dispatch)            
-            setEditId(null)
-        } else {
-            peopleActions.create(people)(dispatch);
-        }
-        cleanInputs();
+        console.log(people)
+        // if (editId) {
+        //     peopleActions.update(editId, people)(dispatch)            
+        //     setEditId(null)
+        // } else {
+        //     peopleActions.create(people)(dispatch);
+        // }
+        // cleanInputs();
     }
 
     const handleReset = () => {
@@ -65,7 +70,7 @@ const People = () => {
                 onSubmit={handleSubmit} 
                 onReset={handleReset} 
                 editId={editId} 
-                ref={{firstNameInputRef, lastNameInputRef}}
+                ref={{firstNameInputRef, lastNameInputRef, birthDateInputRef, birthPlaceInputRef}}
                 db={dbReady} 
             />
             <PeopleList 

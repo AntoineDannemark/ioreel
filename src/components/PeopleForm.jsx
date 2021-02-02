@@ -25,8 +25,8 @@ const PeopleForm = React.forwardRef(({db, editId, onSubmit, onReset}, ref) => {
     return (
         <IonGrid 
             fixed 
-            className="ion-margin-top" 
-            style={{"background-color": "lightGrey"}}
+            // className="ion-margin-top" 
+            style={{"backgroundColor": "lightBlue"}}
         >
             <IonRow className="ion-justify-content-evenly">
                 <IonCol 
@@ -48,7 +48,7 @@ const PeopleForm = React.forwardRef(({db, editId, onSubmit, onReset}, ref) => {
             </IonRow>
             <IonRow className="ion-justify-content-evenly">
                 <IonCol sizeXs="12" sizeSm="10" sizeMd="6" className="ion-padding">
-                    <DatePicker />
+                    <DatePicker ref={ref.birthDateInputRef}/>
                 </IonCol>
                 <IonCol sizeXs="12" sizeSm="10" sizeMd="6" className="ion-padding">
                     <Input name={"birth place"} ref={ref.birthPlaceInputRef}/>
@@ -62,11 +62,17 @@ const PeopleForm = React.forwardRef(({db, editId, onSubmit, onReset}, ref) => {
                     </IonButton>
                 </IonCol>
                 <IonCol sizeXs="6" sizeSm="5" sizeMd="3" className="ion-padding ion-text-end">
-                    <IonButton onClick={handleSubmitButtonClick} disabled={!db}>
+                    <IonButton 
+                        onClick={handleSubmitButtonClick} 
+                        // disabled={!db}
+                    >
                         <IonIcon slot="start" icon={saveOutline} />
                         submit
                     </IonButton>
                 </IonCol>
+            </IonRow>
+            <IonRow>
+                
             </IonRow>
         </IonGrid>
     );

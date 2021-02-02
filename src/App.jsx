@@ -1,10 +1,11 @@
 import React, { useReducer, useEffect, useState } from "react";
-import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, isPlatform, getPlatforms } from "@ionic/react";
+import { Redirect, Route } from "react-router-dom";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
 // TODO check if library still needed
 // import { SQLite } from "@ionic-native/sqlite";
+
 import People from "./pages/People";
 
 import peopleReducer from "./store/people/reducer";
@@ -88,7 +89,7 @@ const App = () => {
                         <Router>
                             <IonRouterOutlet>
                                 <Route exact path="/" render={() => <Redirect to="/people" />} />
-                                <Route path="/people" component={People} exact={true} />                    
+                                <Route path="/people" component={People} exact={true} />              
                             </IonRouterOutlet>
                         </Router>
                     </IonApp>
