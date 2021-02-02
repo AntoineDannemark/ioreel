@@ -10,9 +10,9 @@ import {
     trashOutline,
     create,
 } from "ionicons/icons";
-const TenantsList = ({tenants, onEdit, onDelete, db}) => {
-    const handleEditButtonClick = tenant => {
-        onEdit && onEdit(tenant)
+const PeopleList = ({people, onEdit, onDelete, db}) => {
+    const handleEditButtonClick = people => {
+        onEdit && onEdit(people)
     }
 
     const handleDeleteButtonClick = id => {
@@ -21,17 +21,17 @@ const TenantsList = ({tenants, onEdit, onDelete, db}) => {
 
     return (
         <IonList>
-            {tenants.length > 0 && tenants.map((tenant) => (
-                <IonItem key={tenant.id}>
-                    <IonLabel>{`${tenant.firstname} ${tenant.lastname} - ${tenant.id}`}</IonLabel>
+            {people.length > 0 && people.map((people) => (
+                <IonItem key={people.id}>
+                    <IonLabel>{`${people.firstname} ${people.lastname} - ${people.id}`}</IonLabel>
                     <IonButton
-                        onClick={() => handleEditButtonClick(tenant)}
+                        onClick={() => handleEditButtonClick(people)}
                         disabled={!db}
                     >
                         <IonIcon icon={create} />
                     </IonButton>
                     <IonButton
-                        onClick={() => handleDeleteButtonClick(tenant.id)}
+                        onClick={() => handleDeleteButtonClick(people.id)}
                         disabled={!db}
                     >
                         <IonIcon icon={trashOutline} />
@@ -42,4 +42,4 @@ const TenantsList = ({tenants, onEdit, onDelete, db}) => {
     )
 }
 
-export default TenantsList
+export default PeopleList

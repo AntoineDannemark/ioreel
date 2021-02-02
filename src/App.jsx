@@ -5,10 +5,10 @@ import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
 // TODO check if library still needed
 // import { SQLite } from "@ionic-native/sqlite";
-import Tenants from "./pages/Tenants";
+import People from "./pages/People";
 
-import tenantsReducer from "./store/tenants/reducer";
-import { initialState as tenantsInitialState } from "./store/tenants/index";
+import peopleReducer from "./store/people/reducer";
+import { initialState as peopleInitialState } from "./store/people/index";
 import { DispatchContextProvider, StateContextProvider, DBContextProvider } from './context/Context';
 
 /* Core CSS required for Ionic components to work properly */
@@ -49,7 +49,8 @@ const getDriver = () => {
 
 // TODO extract platform logic 
 const initDb = async(dbReadySetter, errorSetter) => {
-    if (!isPlatform("cordova") && !isPlatform("electron")) return 
+    if (!isPlatform("cordova") && !isPlatform("electron")) return;
+
     if (isPlatform("cordova")) {
         window.api = require('./api').api;
     }
@@ -72,7 +73,7 @@ const App = () => {
     const [dbReady, setDbReady] = useState();
     const [error, setError] = useState()
 
-    const [state, dispatch] = useReducer(tenantsReducer, tenantsInitialState);
+    const [state, dispatch] = useReducer(peopleReducer, peopleInitialState);
 
     // Init DB at mount
     useEffect(() => {
@@ -86,8 +87,8 @@ const App = () => {
                     <IonApp>
                         <Router>
                             <IonRouterOutlet>
-                                <Route exact path="/" render={() => <Redirect to="/tenants" />} />
-                                <Route path="/tenants" component={Tenants} exact={true} />                    
+                                <Route exact path="/" render={() => <Redirect to="/people" />} />
+                                <Route path="/people" component={People} exact={true} />                    
                             </IonRouterOutlet>
                         </Router>
                     </IonApp>

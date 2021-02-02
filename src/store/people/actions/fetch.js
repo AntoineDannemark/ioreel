@@ -4,7 +4,7 @@ export default () => {
     return async(dispatch) => {
         dispatch({ type: FETCH });        
         try {
-            const result = await window.api.fetchTenants()
+            const result = await window.api.fetchPeople()
 
             return dispatch({
                 type: FETCH_SUCCESS, 

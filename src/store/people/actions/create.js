@@ -1,15 +1,15 @@
 import { CREATE, CREATE_SUCCESS, CREATE_ERROR } from '../types';
 
-export default (tenant) => {
+export default (person) => {
     return async(dispatch) => {
         dispatch({ type: CREATE });
         try {
-            const result = await window.api.createTenant(tenant)
+            const result = await window.api.createPerson(person)
 
             return dispatch({
                 type: CREATE_SUCCESS, 
                 payload: {
-                    ...tenant,
+                    ...person,
                     id: result.raw
                 }
             });

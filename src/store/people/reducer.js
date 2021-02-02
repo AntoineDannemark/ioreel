@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 fetchPending: false,
-                tenants: action.payload,
+                people: action.payload,
             }
         case TYPES.CREATE:
             return {
@@ -37,8 +37,8 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 createPending: false,
-                tenants: [
-                    ...state.tenants,
+                people: [
+                    ...state.people,
                     action.payload,
                 ]
             }
@@ -58,13 +58,13 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 updatePending: false,
-                tenants: state.tenants.map(
-                    t => t.id === action.payload.id 
+                people: state.people.map(
+                    p => p.id === action.payload.id 
                         ? {
-                            ...t,
+                            ...p,
                             firstname: action.payload.firstname, 
                             lastname: action.payload.lastname
-                        } : t
+                        } : p
                 )
             }
         case TYPES.REMOVE:
@@ -83,7 +83,7 @@ export default (state = initialState, action) => {
             return {
                 ...state,
                 removePending: false,
-                tenants: state.tenants.filter(t => t.id !== action.payload)
+                people: state.people.filter(p => p.id !== action.payload)
             }
         default: 
             return state;

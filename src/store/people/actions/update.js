@@ -4,7 +4,7 @@ export default (id, data) => {
     return async(dispatch) => {
         dispatch({ type: UPDATE });
         try {
-            await window.api.updateTenant(id, data)
+            await window.api.updatePerson(id, data)
 
             dispatch({type: UPDATE_SUCCESS, payload: { id, ...data }})
         } catch(e) {

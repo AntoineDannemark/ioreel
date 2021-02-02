@@ -1,0 +1,12 @@
+export const FETCH = 'fetch-people';
+export const FETCH_ERROR = 'fetch-people-error';
+export const FETCH_SUCCESS = 'fetch-people-success';
+export const CREATE = 'create-person';
+export const CREATE_ERROR = 'create-person-error';
+export const CREATE_SUCCESS = 'create-tenant-success';
+export const UPDATE = 'update-person';
+export const UPDATE_ERROR = 'update-person-error';
+export const UPDATE_SUCCESS = 'update-person-success';
+export const REMOVE = 'remove-person';
+export const REMOVE_ERROR = 'remove-person-error';
+export const REMOVE_SUCCESS = 'remove-person-success';

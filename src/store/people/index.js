@@ -4,7 +4,7 @@ import update from './actions/update';
 import remove from './actions/remove';
 
 export const initialState = {
-    tenants: [],
+    people: [],
     fetchPending: false,
     fetchError: null,
     createPending: false,

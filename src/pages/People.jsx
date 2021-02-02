@@ -1,11 +1,11 @@
 import React , { useState, useContext, useEffect, useRef } from "react";
 import { DBContext, DispatchContext, StateContext } from "../context/Context";
-import { actions as tenantActions } from '../store/tenants';
-import { IonContent, IonButton } from "@ionic/react";
-import TenantForm from '../components/TenantForm';
-import TenantsList from '../components/TenantsList';
+import { actions as peopleActions } from '../store/people';
+import { IonContent } from "@ionic/react";
+import PeopleForm from '../components/PeopleForm';
+import PeopleList from '../components/PeopleList';
 
-const Tenants = () => {
+const People = () => {
     const [editId, setEditId] = useState(null);
     
     const state = useContext(StateContext);    
@@ -14,6 +14,7 @@ const Tenants = () => {
 
     const firstNameInputRef = useRef(null);
     const lastNameInputRef = useRef(null);
+    const birthPlaceInputRef = useRef(null);
 
     const cleanInputs = () => {        
         firstNameInputRef.current.value = '';
@@ -21,23 +22,24 @@ const Tenants = () => {
     }
 
     useEffect(() => {
-        if (dbReady && !state.tenants.length) {
-            tenantActions.fetch()(dispatch)
+        if (dbReady && !state.people.length) {
+            peopleActions.fetch()(dispatch)
         }        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[dbReady]);
 
     const handleSubmit = () => {
-        let tenant = {        
+        let people = {        
             firstname: firstNameInputRef.current.value,
             lastname: lastNameInputRef.current.value,
+            birthPlace: birthPlaceInputRef.current.value,
         };
         
         if (editId) {
-            tenantActions.update(editId, tenant)(dispatch)            
+            peopleActions.update(editId, people)(dispatch)            
             setEditId(null)
         } else {
-            tenantActions.create(tenant)(dispatch);
+            peopleActions.create(people)(dispatch);
         }
         cleanInputs();
     }
@@ -47,32 +49,27 @@ const Tenants = () => {
         cleanInputs();
     }
 
-    const handleEdit = tenant => {
-        firstNameInputRef.current.value = tenant.firstname;
-        lastNameInputRef.current.value = tenant.lastname;
-        setEditId(tenant.id)
+    const handleEdit = people => {
+        firstNameInputRef.current.value = people.firstname;
+        lastNameInputRef.current.value = people.lastname;
+        setEditId(people.id)
     }
 
     const handleDelete = id => {
-        tenantActions.remove(id)(dispatch)
-    }
-
-    const handleFetch = () => {
-        tenantActions.fetch()(dispatch)
+        peopleActions.remove(id)(dispatch)
     }
 
     return (
         <IonContent>
-            <IonButton onClick={handleFetch} enabled={dbReady}>{'FETCH'}</IonButton>
-            <TenantForm 
+            <PeopleForm 
                 onSubmit={handleSubmit} 
                 onReset={handleReset} 
                 editId={editId} 
                 ref={{firstNameInputRef, lastNameInputRef}}
                 db={dbReady} 
             />
-            <TenantsList 
-                tenants={state.tenants || []} 
+            <PeopleList 
+                people={state.people || []} 
                 db={dbReady} 
                 onEdit={handleEdit} 
                 onDelete={handleDelete}
@@ -81,4 +78,4 @@ const Tenants = () => {
     );
 };
 
-export default Tenants;
+export default People;

@@ -4,7 +4,7 @@ export default (id) => {
     return async(dispatch) => {
         dispatch({ type: REMOVE });
         try {           
-            await window.api.removeTenant(id);
+            await window.api.removePerson(id);
 
             return dispatch({
                 type: REMOVE_SUCCESS, 
