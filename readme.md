@@ -137,3 +137,15 @@ Une fois installé, il faudra encore télécharger le SDK pour Android 10 (API L
 
 On peut tester l'application sur un appareil virtuel (plusieurs modèles disponibles en téléchargement via AS) ou physique. Pour tester sur un appareil physique, il faut d'abord activer les outils de développement sur celui-ci en allant dans
 `Paramètres > A Propos Du Téléphone > Informations Sur Le Logiciel` et tapper 7 fois sur le `Numéro de version`. Ensuite, aller dans le menu `Options De Développement` qui sera apparu dans les paramètres et `activer le débogage USB`. Une fois connecté via USB, l'appareil sera accessible pour installer l'application et vous pourrez accéder aux outils de développement dans chrome à l'addresse `chrome://inspect#devices` (après un temps de chargement votre appareil devrait s'afficher et il suffira de cliquer sur `inspect` pour ouvrir les devtools).
+
+## XCode
+
+Pour tester et builder pour ios, il est nécessaire d'utiliser un mac avec Xcode installé.
+Une fois Xcode installé, s'assurer que les outils en ligne de commande sont utilisables via `xcode-select --install`.
+
+Lors de l'ajout de la plateforme via `npx cap add ios`, capacitor réclame l'ajout de [cocoapods](https://cocoapods.org/).
+
+## Typescript
+
+💡 Dans VSCode on peut voir la définition du type d'une variable en la survolant. On peut également copier cette valeur afin de la coller à l'endroit souhaité.
+https://stackoverflow.com/questions/59432133/how-to-type-state-and-dispatch-for-usereducer-typescript-and-react

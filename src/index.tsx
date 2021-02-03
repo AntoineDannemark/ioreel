@@ -12,5 +12,7 @@ ReactDOM.render(<App />, document.getElementById("root"));
 // Learn more about service workers: https://bit.ly/CRA-PWA
 serviceWorker.register();
 
+// Following is added for using the camera
+// https://capacitorjs.com/docs/web/pwa-elements
 // Call the element loader after the platform has been bootstrapped
 defineCustomElements(window);
