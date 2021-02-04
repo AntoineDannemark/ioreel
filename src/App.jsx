@@ -1,4 +1,7 @@
-import React, { useReducer, useEffect, useState } from "react";
+import React, { 
+    useEffect, 
+    useState 
+} from "react";
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, isPlatform, getPlatforms } from "@ionic/react";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
@@ -7,9 +10,15 @@ import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 // import { SQLite } from "@ionic-native/sqlite";
 import Tenants from "./pages/Tenants";
 
-import tenantsReducer from "./store/tenants/reducer";
-import { initialState as tenantsInitialState } from "./store/tenants/index";
-import { DispatchContextProvider, StateContextProvider, DBContextProvider } from './context/Context';
+import { 
+    // DispatchContextProvider, 
+    // StateContextProvider, 
+    DBContextProvider 
+} from './context/Context';
+
+// import tenantsReducer from "./store/tenants/reducer";
+// import { initialState as tenantsInitialState } from "./store/tenants/index";
+import { createSlice } from "@reduxjs/toolkit";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -70,19 +79,21 @@ const initDb = async(dbReadySetter, errorSetter) => {
 
 const App = () => {
     const [dbReady, setDbReady] = useState();
-    const [error, setError] = useState()
+    const [dbInitError, setDbInitError] = useState()
 
-    const [state, dispatch] = useReducer(tenantsReducer, tenantsInitialState);
+    // const [state, dispatch] = useReducer(tenantsReducer, tenantsInitialState);
 
     // Init DB at mount
     useEffect(() => {
-        initDb(setDbReady, setError);
+        initDb(setDbReady, setDbInitError);
     }, []);
 
+    const resetDbError = () => setDbInitError(null);
+
     return (
-        <StateContextProvider value={state}>
-            <DispatchContextProvider value={dispatch}>
-                <DBContextProvider value={dbReady}>
+        // <StateContextProvider value={state}>
+        //     <DispatchContextProvider value={dispatch}>
+                <DBContextProvider value={{dbReady, dbInitError, resetDbError}}>
                     <IonApp>
                         <Router>
                             <IonRouterOutlet>
@@ -92,8 +103,8 @@ const App = () => {
                         </Router>
                     </IonApp>
                 </DBContextProvider>
-            </DispatchContextProvider>
-        </StateContextProvider>
+        //     </DispatchContextProvider>
+        // </StateContextProvider>
     );
 };
 

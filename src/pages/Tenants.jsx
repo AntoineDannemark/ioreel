@@ -1,16 +1,16 @@
 import React , { useState, useContext, useEffect, useRef } from "react";
 import { DBContext, DispatchContext, StateContext } from "../context/Context";
 import { actions as tenantActions } from '../store/tenants';
-import { IonContent, IonButton } from "@ionic/react";
+import { IonContent, IonButton, IonAlert } from "@ionic/react";
 import TenantForm from '../components/TenantForm';
 import TenantsList from '../components/TenantsList';
 
 const Tenants = () => {
     const [editId, setEditId] = useState(null);
     
-    const state = useContext(StateContext);    
-    const dispatch = useContext(DispatchContext);
-    const dbReady = useContext(DBContext);
+    // const state = useContext(StateContext);    
+    // const dispatch = useContext(DispatchContext);
+    const {dbReady, dbInitError, resetDbError} = useContext(DBContext);
 
     const firstNameInputRef = useRef(null);
     const lastNameInputRef = useRef(null);
@@ -21,9 +21,13 @@ const Tenants = () => {
     }
 
     useEffect(() => {
-        if (dbReady && !state.tenants.length) {
-            tenantActions.fetch()(dispatch)
-        }        
+        console.log(dbInitError)
+    }, [dbInitError])
+
+    useEffect(() => {
+        // if (dbReady && !state.tenants.length) {
+        //     tenantActions.fetch()(dispatch)
+        // }        
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[dbReady]);
 
@@ -34,10 +38,10 @@ const Tenants = () => {
         };
         
         if (editId) {
-            tenantActions.update(editId, tenant)(dispatch)            
+            // tenantActions.update(editId, tenant)(dispatch)            
             setEditId(null)
         } else {
-            tenantActions.create(tenant)(dispatch);
+            // tenantActions.create(tenant)(dispatch);
         }
         cleanInputs();
     }
@@ -54,15 +58,21 @@ const Tenants = () => {
     }
 
     const handleDelete = id => {
-        tenantActions.remove(id)(dispatch)
+        // tenantActions.remove(id)(dispatch)
     }
 
     const handleFetch = () => {
-        tenantActions.fetch()(dispatch)
+        // tenantActions.fetch()(dispatch)
     }
 
     return (
         <IonContent>
+            <IonAlert 
+                isOpen={!!dbInitError}
+                onDidDismiss={() => resetDbError}
+                header={dbInitError && dbInitError.header}
+                message={dbInitError && dbInitError.message}
+            />
             <IonButton onClick={handleFetch} enabled={dbReady}>{'FETCH'}</IonButton>
             <TenantForm 
                 onSubmit={handleSubmit} 
@@ -72,7 +82,8 @@ const Tenants = () => {
                 db={dbReady} 
             />
             <TenantsList 
-                tenants={state.tenants || []} 
+                // tenants={state.tenants || []} 
+                tenants={[]} 
                 db={dbReady} 
                 onEdit={handleEdit} 
                 onDelete={handleDelete}
