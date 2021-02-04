@@ -31,6 +31,7 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 
 import "reflect-metadata";
+import Logger from "./utils/Logger";
 
 const Router = isPlatform("electron")
     ? IonReactHashRouter
@@ -48,8 +49,8 @@ const getDriver = () => {
 }
 
 // TODO extract platform logic 
-const initDb = async(dbReadySetter, errorSetter) => {
-    if (!isPlatform("cordova") && !isPlatform("electron")) return 
+const initDb = async (dbReadySetter, errorSetter) => {
+    if (!isPlatform("cordova") && !isPlatform("electron")) return
     if (isPlatform("cordova")) {
         window.api = require('./api').api;
     }
@@ -57,14 +58,14 @@ const initDb = async(dbReadySetter, errorSetter) => {
     const res = await window.api.initDB(getDriver());
 
     if (res.dbReady) {
-        console.log(`[${getPlatforms()[0]}] - DB Init Success`);
-        dbReadySetter(true)  
+        Logger.log(`DB Init Success`);
+        dbReadySetter(true)
     } else if (res.error) {
-        console.log(`[${getPlatforms()[0]}] - DB Init Error: ${res.error}`);
+        Logger.error(`DB Init Error: ${res.error}`);
         errorSetter({
             header: `[${getPlatforms()[0]}] - DB Init Error`,
             message: res.error,
-        }); 
+        });
     }
 }
 
@@ -77,6 +78,7 @@ const App = () => {
     // Init DB at mount
     useEffect(() => {
         initDb(setDbReady, setError);
+        Logger.log("Mounting app, initializing DB...");
     }, []);
 
     return (
@@ -87,7 +89,7 @@ const App = () => {
                         <Router>
                             <IonRouterOutlet>
                                 <Route exact path="/" render={() => <Redirect to="/tenants" />} />
-                                <Route path="/tenants" component={Tenants} exact={true} />                    
+                                <Route path="/tenants" component={Tenants} exact={true} />
                             </IonRouterOutlet>
                         </Router>
                     </IonApp>
