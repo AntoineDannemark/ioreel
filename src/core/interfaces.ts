@@ -1,5 +1,3 @@
-import {Tenant} from '../../api/entities/Tenant';
-
 declare global {
     interface Window {
         // TODO Consider typing api?
@@ -19,7 +17,7 @@ export interface IError {
 }
 
 export interface IState {
-    tenants: Tenant[];
+    tenants: any[];
     fetchPending: Boolean;
     fetchError: IError | null;
     createPending: boolean;
