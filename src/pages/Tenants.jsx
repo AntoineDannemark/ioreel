@@ -1,19 +1,38 @@
-import React , { useState, useContext, useEffect, useRef } from "react";
-import { DBContext, DispatchContext, StateContext } from "../context/Context";
-import { actions as tenantActions } from '../store/tenants';
-import { IonContent, IonButton, IonAlert } from "@ionic/react";
-import TenantForm from '../components/TenantForm';
-import TenantsList from '../components/TenantsList';
+import React, { 
+    useState, 
+    useContext, 
+    useEffect, 
+    useRef 
+} from "react"
+import { 
+    useDispatch, 
+    useSelector 
+} from 'react-redux'
+import { 
+    fetchTenants,
+    createTenant,
+    updateTenant,
+    deleteTenant
+} from '../Features/tenants/tenantsSlice'
+import { DBContext } from "../XXcontext/Context"
+
+import TenantForm from '../Features/tenants/TenantForm'
+import TenantsList from '../Features/tenants/TenantsList'
+
+import { 
+    IonContent,
+    IonAlert 
+} from "@ionic/react"
 
 const Tenants = () => {
-    const [editId, setEditId] = useState(null);
-    
-    // const state = useContext(StateContext);    
-    // const dispatch = useContext(DispatchContext);
-    const {dbReady, dbInitError, resetDbError} = useContext(DBContext);
+    const dispatch = useDispatch()
+    const tenants = useSelector(({tenants}) => tenants.list)
+    const [editId, setEditId] = useState(null)
 
-    const firstNameInputRef = useRef(null);
-    const lastNameInputRef = useRef(null);
+    const {dbReady, dbInitError, resetDbError} = useContext(DBContext)
+
+    const firstNameInputRef = useRef(null)
+    const lastNameInputRef = useRef(null)
 
     const cleanInputs = () => {        
         firstNameInputRef.current.value = '';
@@ -21,34 +40,30 @@ const Tenants = () => {
     }
 
     useEffect(() => {
-        console.log(dbInitError)
-    }, [dbInitError])
-
-    useEffect(() => {
-        // if (dbReady && !state.tenants.length) {
-        //     tenantActions.fetch()(dispatch)
-        // }        
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[dbReady]);
+        if (dbReady) {
+            dispatch(fetchTenants())
+        }        
+    },[dbReady, dispatch])
 
     const handleSubmit = () => {
+        // TODO Consider new Tenant({})
         let tenant = {        
             firstname: firstNameInputRef.current.value,
             lastname: lastNameInputRef.current.value,
-        };
+        }
         
         if (editId) {
-            // tenantActions.update(editId, tenant)(dispatch)            
+            dispatch(updateTenant({ id: editId, ...tenant}))           
             setEditId(null)
         } else {
-            // tenantActions.create(tenant)(dispatch);
+            dispatch(createTenant(tenant));
         }
-        cleanInputs();
+        cleanInputs()
     }
 
     const handleReset = () => {
-        editId && setEditId(null);
-        cleanInputs();
+        editId && setEditId(null)
+        cleanInputs()
     }
 
     const handleEdit = tenant => {
@@ -58,11 +73,7 @@ const Tenants = () => {
     }
 
     const handleDelete = id => {
-        // tenantActions.remove(id)(dispatch)
-    }
-
-    const handleFetch = () => {
-        // tenantActions.fetch()(dispatch)
+        dispatch(deleteTenant(id))
     }
 
     return (
@@ -73,7 +84,6 @@ const Tenants = () => {
                 header={dbInitError && dbInitError.header}
                 message={dbInitError && dbInitError.message}
             />
-            <IonButton onClick={handleFetch} enabled={dbReady}>{'FETCH'}</IonButton>
             <TenantForm 
                 onSubmit={handleSubmit} 
                 onReset={handleReset} 
@@ -82,8 +92,7 @@ const Tenants = () => {
                 db={dbReady} 
             />
             <TenantsList 
-                // tenants={state.tenants || []} 
-                tenants={[]} 
+                tenants={tenants || []} 
                 db={dbReady} 
                 onEdit={handleEdit} 
                 onDelete={handleDelete}

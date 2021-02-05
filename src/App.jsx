@@ -10,15 +10,7 @@ import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 // import { SQLite } from "@ionic-native/sqlite";
 import Tenants from "./pages/Tenants";
 
-import { 
-    // DispatchContextProvider, 
-    // StateContextProvider, 
-    DBContextProvider 
-} from './context/Context';
-
-// import tenantsReducer from "./store/tenants/reducer";
-// import { initialState as tenantsInitialState } from "./store/tenants/index";
-import { createSlice } from "@reduxjs/toolkit";
+import { DBContextProvider } from './XXcontext/Context';
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -81,8 +73,6 @@ const App = () => {
     const [dbReady, setDbReady] = useState();
     const [dbInitError, setDbInitError] = useState()
 
-    // const [state, dispatch] = useReducer(tenantsReducer, tenantsInitialState);
-
     // Init DB at mount
     useEffect(() => {
         initDb(setDbReady, setDbInitError);
@@ -91,20 +81,16 @@ const App = () => {
     const resetDbError = () => setDbInitError(null);
 
     return (
-        // <StateContextProvider value={state}>
-        //     <DispatchContextProvider value={dispatch}>
-                <DBContextProvider value={{dbReady, dbInitError, resetDbError}}>
-                    <IonApp>
-                        <Router>
-                            <IonRouterOutlet>
-                                <Route exact path="/" render={() => <Redirect to="/tenants" />} />
-                                <Route path="/tenants" component={Tenants} exact={true} />                    
-                            </IonRouterOutlet>
-                        </Router>
-                    </IonApp>
-                </DBContextProvider>
-        //     </DispatchContextProvider>
-        // </StateContextProvider>
+        <DBContextProvider value={{dbReady, dbInitError, resetDbError}}>
+            <IonApp>
+                <Router>
+                    <IonRouterOutlet>
+                        <Route exact path="/" render={() => <Redirect to="/tenants" />} />
+                        <Route path="/tenants" component={Tenants} exact={true} />                    
+                    </IonRouterOutlet>
+                </Router>
+            </IonApp>
+        </DBContextProvider>
     );
 };
 
