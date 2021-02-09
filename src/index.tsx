@@ -6,13 +6,20 @@ import store from "./app/store";
 import * as serviceWorker from "./serviceWorker";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import ContextProvider from "./context/Context";
+import { InsertResult, UpdateResult, DeleteResult } from "typeorm";
 
-// TODO This should probably be declared elsewhere
+// TODO This should (probably) be declared elsewhere
+// + interface the api + replace 'any'
 declare global {
   interface Window {
-    // TODO Consider typing api?
     // https://stackoverflow.com/questions/56457935/typescript-error-property-x-does-not-exist-on-type-window/56458070
-    api: any;
+    api: {
+      fetchTenants: () => Promise<any>;
+      createTenant: (tenant: any) => Promise<InsertResult>;
+      updateTenant: (id: number, data: any) => Promise<UpdateResult>;
+      removeTenant: (id: number) => Promise<DeleteResult>;
+      initDB: (platform: any) => Promise<any>;
+    };
   }
 }
 
