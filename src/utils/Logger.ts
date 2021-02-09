@@ -11,27 +11,27 @@
 
 import { getPlatforms, isPlatform } from "@ionic/react";
 
-export const log = (...aArgs) => {
+export const log = (text: string) => {
     if (isPlatform("electron")) {
-        window.api.log("info", `[${getPlatforms()[0]}] - `, ...aArgs);
+        window.api.log && window.api.log({type: "info", message: `[${getPlatforms()[0]}] - ${text}`});
     } else {
-        console.log(`[${getPlatforms()[0]}] - `, ...aArgs);
+        console.log(`[${getPlatforms()[0]}] - ${text}`);
     }
 }
 
-export const warn = (...aArgs) => {
+export const warn = (text: string) => {
     if (isPlatform("electron")) {
-        window.api.log("warn", `[${getPlatforms()[0]}] - `, ...aArgs);
+        window.api.log && window.api.log({type: "warn", message: `[${getPlatforms()[0]}] - ${text}`});
     } else {
-        console.warn(`[${getPlatforms()[0]}] - `, ...aArgs);
+        console.warn(`[${getPlatforms()[0]}] - ${text}`);
     }
 }
 
-export const error = (...aArgs) => {
+export const error = (text: string) => {
     if (isPlatform("electron")) {
-        window.api.log("error",`[${getPlatforms()[0]}] - `, ...aArgs);
+        window.api.log && window.api.log({type: "error", message: `[${getPlatforms()[0]}] - ${text}`});
     } else {
-        console.error(`[${getPlatforms()[0]}] - `, ...aArgs);
+        console.error(`[${getPlatforms()[0]}] - ${text}`);
     }
 }
 
