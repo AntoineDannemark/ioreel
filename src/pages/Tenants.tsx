@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAppDispatch, useTypedSelector } from "../app/store";
 
 import {
@@ -8,7 +8,7 @@ import {
   deleteTenant,
 } from "../Features/tenants/tenantsSlice";
 
-import { Context } from "../context/Context";
+import { useAppContext } from "../context/Context";
 
 import TenantForm from "../Features/tenants/TenantForm";
 import TenantsList from "../Features/tenants/TenantsList";
@@ -24,7 +24,7 @@ const Tenants = () => {
     lastname: string;
   }>(null);
 
-  const { dbReady, dbInitError, resetDbError } = useContext(Context);
+  const { dbReady, dbInitError, resetDbError } = useAppContext();
 
   useEffect(() => {
     if (dbReady) {

@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
@@ -8,6 +8,7 @@ import {
 } from "@ionic/react";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
+import { useAppContext } from "../context/Context";
 // TODO check if library still needed
 // import { SQLite } from "@ionic-native/sqlite";
 import Tenants from "../pages/Tenants";
@@ -30,7 +31,6 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "../theme/variables.css";
-import { Context } from "../context/Context";
 
 const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter;
 
@@ -64,7 +64,7 @@ const initDb = async (dbReadySetter, errorSetter) => {
 };
 
 const App: React.FC = () => {
-  const { setDbReady, setDbInitError } = useContext(Context);
+  const { setDbReady, setDbInitError } = useAppContext();
 
   // Init DB at mount
   useEffect(() => {
