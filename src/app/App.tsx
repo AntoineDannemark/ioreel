@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
@@ -11,8 +11,6 @@ import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 // TODO check if library still needed
 // import { SQLite } from "@ionic-native/sqlite";
 import Tenants from "../pages/Tenants";
-
-import { DBContextProvider } from "../XXcontext/Context";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -32,6 +30,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "../theme/variables.css";
+import { Context } from "../context/Context";
 
 const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter;
 
@@ -46,7 +45,6 @@ const getDriver = () => {
   return driver;
 };
 
-// TODO extract platform logic
 const initDb = async (dbReadySetter, errorSetter) => {
   if (!isPlatform("cordova") && !isPlatform("electron")) return;
   if (isPlatform("cordova")) {
@@ -56,10 +54,8 @@ const initDb = async (dbReadySetter, errorSetter) => {
   const res = await window.api.initDB(getDriver());
 
   if (res.dbReady) {
-    console.log(`[${getPlatforms()[0]}] - DB Init Success`);
     dbReadySetter(true);
   } else if (res.error) {
-    console.log(`[${getPlatforms()[0]}] - DB Init Error: ${res.error}`);
     errorSetter({
       header: `[${getPlatforms()[0]}] - DB Init Error`,
       message: res.error,
@@ -68,27 +64,22 @@ const initDb = async (dbReadySetter, errorSetter) => {
 };
 
 const App: React.FC = () => {
-  const [dbReady, setDbReady] = useState();
-  const [dbInitError, setDbInitError] = useState();
+  const { setDbReady, setDbInitError } = useContext(Context);
 
   // Init DB at mount
   useEffect(() => {
     initDb(setDbReady, setDbInitError);
-  }, []);
-
-  const resetDbError = () => setDbInitError(null);
+  }, [setDbInitError, setDbReady]);
 
   return (
-    <DBContextProvider value={{ dbReady, dbInitError, resetDbError }}>
-      <IonApp>
-        <Router>
-          <IonRouterOutlet>
-            <Route exact path="/" render={() => <Redirect to="/tenants" />} />
-            <Route path="/tenants" component={Tenants} exact={true} />
-          </IonRouterOutlet>
-        </Router>
-      </IonApp>
-    </DBContextProvider>
+    <IonApp>
+      <Router>
+        <IonRouterOutlet>
+          <Route exact path="/" render={() => <Redirect to="/tenants" />} />
+          <Route path="/tenants" component={Tenants} exact={true} />
+        </IonRouterOutlet>
+      </Router>
+    </IonApp>
   );
 };
 

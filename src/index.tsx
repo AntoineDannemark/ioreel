@@ -5,6 +5,7 @@ import { Provider } from "react-redux";
 import store from "./app/store";
 import * as serviceWorker from "./serviceWorker";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
+import ContextProvider from "./context/Context";
 
 // TODO This should probably be declared elsewhere
 declare global {
@@ -19,9 +20,11 @@ const renderApp = () => {
   const App = require("./app/App").default;
 
   render(
-    <Provider store={store}>
-      <App />
-    </Provider>,
+    <ContextProvider>
+      <Provider store={store}>
+        <App />
+      </Provider>
+    </ContextProvider>,
     document.getElementById("root")
   );
 };
