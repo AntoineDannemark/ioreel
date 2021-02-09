@@ -55,6 +55,7 @@
   },
   "description": "An Ionic project",
   "devDependencies": {
-    "@capacitor/cli": "2.4.6"
+    "@capacitor/cli": "2.4.6",
+    "@types/redux-logger": "^3.0.8"
   }
 }

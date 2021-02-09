@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useTypedSelector } from "../app/store";
+import { useAppContext } from "../context/Context";
 
 import {
   fetchTenants,
@@ -8,7 +9,7 @@ import {
   deleteTenant,
 } from "../Features/tenants/tenantsSlice";
 
-import { useAppContext } from "../context/Context";
+import { Tenant } from "../Features/tenants/types";
 
 import TenantForm from "../Features/tenants/TenantForm";
 import TenantsList from "../Features/tenants/TenantsList";
@@ -18,11 +19,11 @@ import { IonContent, IonAlert } from "@ionic/react";
 const Tenants = () => {
   const dispatch = useAppDispatch();
   const tenants = useTypedSelector((state) => state.tenants.list);
-  const [editId, setEditId] = useState<number>(null);
+  const [editId, setEditId] = useState<number | null>(null);
   const [editValues, setEditValues] = useState<{
     firstname: string;
     lastname: string;
-  }>(null);
+  } | null>(null);
 
   const { dbReady, dbInitError, resetDbError } = useAppContext();
 
@@ -52,13 +53,13 @@ const Tenants = () => {
     editId && setEditId(null);
   };
 
-  const handleEdit = (tenant) => {
+  const handleEdit = (tenant: Tenant) => {
     let { id, firstname, lastname } = tenant;
     setEditId(id);
     setEditValues({ firstname, lastname });
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     dispatch(deleteTenant(id));
   };
 
@@ -67,8 +68,8 @@ const Tenants = () => {
       <IonAlert
         isOpen={!!dbInitError}
         onDidDismiss={() => resetDbError}
-        header={dbInitError && dbInitError.header}
-        message={dbInitError && dbInitError.message}
+        header={!!dbInitError ? dbInitError.header : undefined}
+        message={!!dbInitError ? dbInitError.message : undefined}
       />
       <TenantForm
         onSubmit={handleSubmit}

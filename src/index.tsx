@@ -8,6 +8,11 @@ import { defineCustomElements } from "@ionic/pwa-elements/loader";
 import ContextProvider from "./context/Context";
 import { InsertResult, UpdateResult, DeleteResult } from "typeorm";
 
+interface log {
+  type: "info" | "warn" | "error";
+  message: string;
+}
+
 // TODO This should (probably) be declared elsewhere
 // + interface the api + replace 'any'
 declare global {
@@ -19,6 +24,7 @@ declare global {
       updateTenant: (id: number, data: any) => Promise<UpdateResult>;
       removeTenant: (id: number) => Promise<DeleteResult>;
       initDB: (platform: any) => Promise<any>;
+      log?: (log: log) => void;
     };
   }
 }

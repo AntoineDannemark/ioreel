@@ -9,7 +9,11 @@ interface Props {
   onDeleteBtnClick: (id: number) => void;
 }
 
-const TenantItem = ({ tenant, onEditBtnClick, onDeleteBtnClick }) => {
+const TenantItem: React.FC<Props> = ({
+  tenant,
+  onEditBtnClick,
+  onDeleteBtnClick,
+}) => {
   return (
     <IonItem key={tenant.id}>
       <IonLabel>{`${tenant.firstname} ${tenant.lastname} - ${tenant.id}`}</IonLabel>

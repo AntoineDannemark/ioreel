@@ -5,11 +5,11 @@ import { saveOutline, refreshOutline } from "ionicons/icons";
 
 interface Props {
   dbReady: boolean;
-  editId: number;
+  editId: number | null;
   editValues: {
     firstname: string;
     lastname: string;
-  };
+  } | null;
   onSubmit: (data: { firstname: string; lastname: string }) => void;
   onReset: () => void;
 }
@@ -26,15 +26,15 @@ const TenantForm: React.FC<Props> = ({
 
   useEffect(() => {
     if (editValues) {
-      firstNameInputRef.current.value = editValues.firstname;
-      lastNameInputRef.current.value = editValues.lastname;
+      firstNameInputRef.current!.value = editValues.firstname;
+      lastNameInputRef.current!.value = editValues.lastname;
     }
   }, [editValues]);
 
   const handleSubmitButtonClick = () => {
     let tenant = {
-      firstname: firstNameInputRef.current.value.toString(),
-      lastname: lastNameInputRef.current.value.toString(),
+      firstname: firstNameInputRef.current!.value!.toString(),
+      lastname: lastNameInputRef.current!.value!.toString(),
     };
 
     onSubmit && onSubmit(tenant);
@@ -47,8 +47,8 @@ const TenantForm: React.FC<Props> = ({
   };
 
   const cleanInputs = () => {
-    firstNameInputRef.current.value = "";
-    lastNameInputRef.current.value = "";
+    firstNameInputRef.current!.value = "";
+    lastNameInputRef.current!.value = "";
   };
 
   return (

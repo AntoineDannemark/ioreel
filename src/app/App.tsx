@@ -8,9 +8,13 @@ import {
 } from "@ionic/react";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
-import { useAppContext } from "../context/Context";
 // TODO check if library still needed
 // import { SQLite } from "@ionic-native/sqlite";
+
+import { useAppContext } from "../context/Context";
+
+import { dbInitError } from "../context/Context";
+
 import Tenants from "../pages/Tenants";
 
 /* Core CSS required for Ionic components to work properly */
@@ -34,18 +38,12 @@ import "../theme/variables.css";
 
 const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter;
 
-const getDriver = () => {
-  let driver;
+const getDriver = () => (isPlatform("cordova") ? "cordova" : "sqlite");
 
-  if (isPlatform("cordova")) {
-    driver = "cordova";
-  } else if (isPlatform("electron")) {
-    driver = "sqlite";
-  }
-  return driver;
-};
-
-const initDb = async (dbReadySetter, errorSetter) => {
+const initDb = async (
+  dbReadySetter: React.Dispatch<React.SetStateAction<boolean>>,
+  errorSetter: React.Dispatch<React.SetStateAction<dbInitError | null>>
+) => {
   if (!isPlatform("cordova") && !isPlatform("electron")) return;
   if (isPlatform("cordova")) {
     window.api = require("../api").api;
@@ -65,11 +63,20 @@ const initDb = async (dbReadySetter, errorSetter) => {
 
 const App: React.FC = () => {
   const { setDbReady, setDbInitError } = useAppContext();
+  const { log } = window.api;
 
   // Init DB at mount
   useEffect(() => {
+    log &&
+      log({
+        type: "info",
+        message: "you're simply the best",
+      });
+
+    log && log({ type: "info", message: "coucouc charcles" });
+
     initDb(setDbReady, setDbInitError);
-  }, [setDbInitError, setDbReady]);
+  }, [log, setDbInitError, setDbReady]);
 
   return (
     <IonApp>

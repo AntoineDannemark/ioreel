@@ -4,20 +4,17 @@ import TenantItem from "./TenantItem";
 import type { Tenant } from "./types";
 
 interface Props {
-  // TODO replace with Tenant type
   tenants: Tenant[];
-  // TODO replace with Tenant type && check return type
   onEdit: (tenant: Tenant) => void;
-  // TODO check return type
   onDelete: (id: number) => void;
 }
 
-const TenantsList: React.VFC<Props> = ({ tenants, onEdit, onDelete }) => {
-  const handleEditButtonClick = (tenant) => {
+const TenantsList: React.FC<Props> = ({ tenants, onEdit, onDelete }) => {
+  const handleEditButtonClick = (tenant: Tenant) => {
     onEdit && onEdit(tenant);
   };
 
-  const handleDeleteButtonClick = (id) => {
+  const handleDeleteButtonClick = (id: number) => {
     onDelete && onDelete(id);
   };
 
