@@ -63,20 +63,11 @@ const initDb = async (
 
 const App: React.FC = () => {
   const { setDbReady, setDbInitError } = useAppContext();
-  const { log } = window.api;
 
   // Init DB at mount
   useEffect(() => {
-    log &&
-      log({
-        type: "info",
-        message: "you're simply the best",
-      });
-
-    log && log({ type: "info", message: "coucouc charcles" });
-
     initDb(setDbReady, setDbInitError);
-  }, [log, setDbInitError, setDbReady]);
+  }, [setDbInitError, setDbReady]);
 
   return (
     <IonApp>
