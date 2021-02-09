@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import Input from "../../commons/Input";
 import { IonGrid, IonRow, IonCol, IonButton, IonIcon } from "@ionic/react";
 import { saveOutline, refreshOutline } from "ionicons/icons";
@@ -6,6 +6,10 @@ import { saveOutline, refreshOutline } from "ionicons/icons";
 interface Props {
   dbReady: boolean;
   editId: number;
+  editValues: {
+    firstname: string;
+    lastname: string;
+  };
   onSubmit: (data: { firstname: string; lastname: string }) => void;
   onReset: () => void;
 }
@@ -13,11 +17,19 @@ interface Props {
 const TenantForm: React.FC<Props> = ({
   dbReady,
   editId,
+  editValues,
   onSubmit,
   onReset,
 }) => {
   const firstNameInputRef = useRef<HTMLIonInputElement>(null);
   const lastNameInputRef = useRef<HTMLIonInputElement>(null);
+
+  useEffect(() => {
+    if (editValues) {
+      firstNameInputRef.current.value = editValues.firstname;
+      lastNameInputRef.current.value = editValues.lastname;
+    }
+  }, [editValues]);
 
   const handleSubmitButtonClick = () => {
     let tenant = {

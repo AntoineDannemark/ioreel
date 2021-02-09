@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useAppDispatch, useTypedSelector } from "../app/store";
 
 import {
@@ -9,7 +8,7 @@ import {
   deleteTenant,
 } from "../Features/tenants/tenantsSlice";
 
-import { DBContext } from "../XXcontext/Context";
+import { Context } from "../context/Context";
 
 import TenantForm from "../Features/tenants/TenantForm";
 import TenantsList from "../Features/tenants/TenantsList";
@@ -20,12 +19,16 @@ const Tenants = () => {
   const dispatch = useAppDispatch();
   const tenants = useTypedSelector((state) => state.tenants.list);
   const [editId, setEditId] = useState<number>(null);
+  const [editValues, setEditValues] = useState<{
+    firstname: string;
+    lastname: string;
+  }>(null);
 
-  const { dbReady, dbInitError, resetDbError } = useContext(DBContext);
+  const { dbReady, dbInitError, resetDbError } = useContext(Context);
 
   useEffect(() => {
     if (dbReady) {
-      setTimeout(() => dispatch(fetchTenants()), 1500);
+      dispatch(fetchTenants());
     }
   }, [dbReady, dispatch]);
 
@@ -37,12 +40,12 @@ const Tenants = () => {
     lastname: string;
   }) => {
     if (editId) {
-      //   dispatch(updateTenant({ id: editId, fisrtname, lastname }));
+      dispatch(updateTenant({ id: editId, firstname, lastname }));
       setEditId(null);
+      setEditValues(null);
     } else {
       dispatch(createTenant({ firstname, lastname }));
     }
-    // cleanInputs();
   };
 
   const handleReset = () => {
@@ -50,7 +53,9 @@ const Tenants = () => {
   };
 
   const handleEdit = (tenant) => {
-    setEditId(tenant.id);
+    let { id, firstname, lastname } = tenant;
+    setEditId(id);
+    setEditValues({ firstname, lastname });
   };
 
   const handleDelete = (id) => {
@@ -68,13 +73,12 @@ const Tenants = () => {
       <TenantForm
         onSubmit={handleSubmit}
         onReset={handleReset}
-        // onEdit={handleEdit}
         editId={editId}
+        editValues={editValues}
         dbReady={dbReady}
       />
       <TenantsList
-        tenants={tenants || []}
-        // dbReady={dbReady}
+        tenants={tenants}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
