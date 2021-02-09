@@ -13,23 +13,27 @@
     "@ionic/react": "^5.0.7",
     "@ionic/react-hooks": "0.0.8",
     "@ionic/react-router": "^5.0.7",
+    "@reduxjs/toolkit": "^1.5.0",
     "@types/node": "^12.12.24",
     "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
+    "@types/react-redux": "^7.1.16",
     "@types/react-router": "^5.1.4",
     "@types/react-router-dom": "^5.1.3",
     "cordova-sqlite-storage": "^5.1.0",
     "ionicons": "^5.0.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-redux": "^7.2.2",
     "react-router": "^5.1.2",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
+    "redux-logger": "^3.0.6",
     "typeorm": "^0.2.30",
     "typescript": "3.8.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "cross-env NODE_PATH=src react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -51,6 +55,7 @@
   },
   "description": "An Ionic project",
   "devDependencies": {
-    "@capacitor/cli": "2.4.6"
+    "@capacitor/cli": "2.4.6",
+    "@types/redux-logger": "^3.0.8"
   }
 }

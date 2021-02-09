@@ -137,3 +137,11 @@ Une fois installé, il faudra encore télécharger le SDK pour Android 10 (API L
 
 On peut tester l'application sur un appareil virtuel (plusieurs modèles disponibles en téléchargement via AS) ou physique. Pour tester sur un appareil physique, il faut d'abord activer les outils de développement sur celui-ci en allant dans
 `Paramètres > A Propos Du Téléphone > Informations Sur Le Logiciel` et tapper 7 fois sur le `Numéro de version`. Ensuite, aller dans le menu `Options De Développement` qui sera apparu dans les paramètres et `activer le débogage USB`. Une fois connecté via USB, l'appareil sera accessible pour installer l'application et vous pourrez accéder aux outils de développement dans chrome à l'addresse `chrome://inspect#devices` (après un temps de chargement votre appareil devrait s'afficher et il suffira de cliquer sur `inspect` pour ouvrir les devtools).
+
+## Typescript
+
+💡 Pour faciliter le dévelopement, activer la validation dans VSCode ce paramètre `"typescript.validate.enable": true,` dans votre settings.json. L'éditeur renseignera directement les erreurs sans devoir passer par le compilateur.
+
+💡 Pour utiliser l'autocomplétion résultant de l'utilisation de TS, utiliser `CTRL + space`
+
+💡 Pour connaitre le type d'une variable, la survoler avec la souris (chercher ce qui vient après le ":")
