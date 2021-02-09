@@ -33,6 +33,46 @@ const initialState: TenantsState = {
 //     state.fetch
 // }
 
+export const fetchTenants = createAsyncThunk(
+    'tenants/fetch',
+    async () => {
+        return await window.api.fetchTenants();
+    }
+)
+
+interface createTenantActionType {
+    firstname: string;
+    lastname: string;
+}
+
+export const createTenant = createAsyncThunk(
+    'tenants/create',
+    async ({firstname, lastname}: createTenantActionType) => {
+        const { raw } = await window.api.createTenant({firstname, lastname})
+        return {
+            id: raw,
+            firstname, 
+            lastname,
+        }
+    }
+)
+
+export const updateTenant = createAsyncThunk(
+    'tenants/update',
+    async (tenant: Tenant) => {
+        const { id, ...rest } = tenant
+        await window.api.updateTenant(id, rest)
+        return tenant
+    }
+)
+
+export const deleteTenant = createAsyncThunk(
+    'tenants/delete',
+    async (id: number) => {
+        await window.api.removeTenant(id)
+        return id
+    }
+)
 
 const tenantsSlice = createSlice({
     name: 'tenants',
@@ -102,44 +142,3 @@ const tenantsSlice = createSlice({
 
 export default tenantsSlice.reducer
 
-
-export const fetchTenants = createAsyncThunk(
-    'tenants/fetch',
-    async () => {
-        return await window.api.fetchTenants();
-    }
-)
-
-interface createTenantActionType {
-    firstname: string;
-    lastname: string;
-}
-
-export const createTenant = createAsyncThunk(
-    'tenants/create',
-    async ({firstname, lastname}: createTenantActionType) => {
-        const { raw } = await window.api.createTenant({firstname, lastname})
-        return {
-            id: raw,
-            firstname, 
-            lastname,
-        }
-    }
-)
-
-export const updateTenant = createAsyncThunk(
-    'tenants/update',
-    async (tenant: Tenant) => {
-        const { id, ...rest } = tenant
-        await window.api.updateTenant(id, rest)
-        return tenant
-    }
-)
-
-export const deleteTenant = createAsyncThunk(
-    'tenants/delete',
-    async (id: number) => {
-        await window.api.removeTenant(id)
-        return id
-    }
-)
