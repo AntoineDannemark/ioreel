@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { Tenant } from './types'
+import { Person } from './types'
 import { ASYNC_ACTIONS_STATUS } from '../../core/constants'
 
 const { IDLE, PENDING } = ASYNC_ACTIONS_STATUS
 
-interface TenantsState {
-    list: Tenant[],
+interface PeopleState {
+    list: Person[],
     fetchStatus: typeof IDLE | typeof PENDING;
     fetchError: string | null;
     addStatus: typeof IDLE | typeof PENDING;
@@ -16,7 +16,7 @@ interface TenantsState {
     deleteError: string | null;
 }
 
-const initialState: TenantsState = {
+const initialState: PeopleState = {
     list: [],
     fetchStatus: IDLE,
     fetchError: null,
@@ -28,107 +28,106 @@ const initialState: TenantsState = {
     deleteError: null,
 }
 
-export const fetchTenants = createAsyncThunk(
-    'tenants/fetch',
+export const fetchPeople = createAsyncThunk(
+    'people/fetch',
     async () => {
-        return await window.api.fetchTenants();
+        return await window.api.fetchPeople();
     }
 )
 
-export const createTenant = createAsyncThunk(
-    'tenants/create',
-    async ({firstname, lastname}: Tenant) => {
-        const { raw } = await window.api.createTenant({firstname, lastname})
+export const createPerson = createAsyncThunk(
+    'people/create',
+    async ({firstname, lastname, email }: Person) => {
+        const { raw } = await window.api.createPerson({firstname, lastname, email})
         return {
             id: raw,
             firstname, 
             lastname,
+            email,
         }
     }
 )
 
-export const updateTenant = createAsyncThunk(
-    'tenants/update',
-    async (tenant: Tenant) => {
-        const { id, ...rest } = tenant
-        await window.api.updateTenant(id!, rest)
-        return tenant
+export const updatePerson = createAsyncThunk(
+    'people/update',
+    async (person: Person) => {
+        const { id, ...rest } = person
+        await window.api.updatePerson(id!, rest)
+        return person
     }
 )
 
-export const deleteTenant = createAsyncThunk(
-    'tenants/delete',
+export const deletePerson = createAsyncThunk(
+    'people/delete',
     async (id: number) => {
-        await window.api.removeTenant(id)
+        await window.api.deletePerson(id)
         return id
     }
 )
 
-const tenantsSlice = createSlice({
-    name: 'tenants',
+const peopleSlice = createSlice({
+    name: 'people',
     initialState,
-    reducers: {
-
-    },
+    reducers: {},
     extraReducers: builder => {
         builder
-            .addCase(fetchTenants.pending, (state) => {
+            .addCase(fetchPeople.pending, (state) => {
                 state.fetchStatus = PENDING
                 state.fetchError = null
             })
-            .addCase(fetchTenants.fulfilled, (state, { payload }: PayloadAction<Tenant[]>) => {
+            .addCase(fetchPeople.fulfilled, (state, { payload }: PayloadAction<Person[]>) => {
                 state.list = payload
                 state.fetchStatus = IDLE
             })
-            .addCase(fetchTenants.rejected, (state, { error }) => {
+            .addCase(fetchPeople.rejected, (state, { error }) => {
                 state.fetchError = error.toString()
                 state.fetchStatus = IDLE
             })
-            .addCase(createTenant.pending, (state) => {
+            .addCase(createPerson.pending, (state) => {
                 state.addStatus = PENDING
                 state.addError = null
             })
             .addCase(
-                createTenant.fulfilled, 
+                createPerson.fulfilled, 
                 (state, { payload }: PayloadAction<{ 
                     id: number; 
                     firstname: string; 
                     lastname: string; 
+                    email: string;
                 }>) => {
                     state.list.push(payload)
                     state.addStatus = IDLE
                 }
             )
-            .addCase(createTenant.rejected, (state, { error }) => {
+            .addCase(createPerson.rejected, (state, { error }) => {
                 state.addError = error.toString()
                 state.addStatus = IDLE
             })
-            .addCase(updateTenant.pending, (state) => {
+            .addCase(updatePerson.pending, (state) => {
                 state.updateStatus = PENDING
                 state.updateError = null
             })
-            .addCase(updateTenant.fulfilled, (state, { payload }: PayloadAction<Tenant>) => {
+            .addCase(updatePerson.fulfilled, (state, { payload }: PayloadAction<Person>) => {
                 state.list = state.list.map(t => t.id === payload.id ? payload : t)
                 state.updateStatus = IDLE
             })
-            .addCase(updateTenant.rejected, (state, { error }) => {
+            .addCase(updatePerson.rejected, (state, { error }) => {
                 state.updateError = error.toString()
                 state.updateStatus = IDLE
             })
-            .addCase(deleteTenant.pending, (state) => {
+            .addCase(deletePerson.pending, (state) => {
                 state.deleteStatus = PENDING
                 state.deleteError = null
             })
-            .addCase(deleteTenant.fulfilled, (state, { payload }: PayloadAction<any>) => {
+            .addCase(deletePerson.fulfilled, (state, { payload }: PayloadAction<any>) => {
                 state.list = state.list.filter(t => t.id !== payload)
                 state.deleteStatus = IDLE
             })
-            .addCase(deleteTenant.rejected, (state, { error }) => {
+            .addCase(deletePerson.rejected, (state, { error }) => {
                 state.deleteError = error.toString()
                 state.deleteStatus = IDLE
             })
-    }   
+    }
 })
 
-export default tenantsSlice.reducer
-
+export default peopleSlice.reducer

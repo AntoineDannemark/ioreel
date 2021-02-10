@@ -22,6 +22,10 @@ interface log {
 declare global {
   interface Window {
     api: {
+      fetchPeople: () => Promise<any>;
+      createPerson: (person: any) => Promise<InsertResult>;
+      updatePerson: (id: number, data: any) => Promise<UpdateResult>;
+      deletePerson: (id: number) => Promise<DeleteResult>;
       fetchTenants: () => Promise<any>;
       createTenant: (tenant: any) => Promise<InsertResult>;
       updateTenant: (id: number, data: any) => Promise<UpdateResult>;

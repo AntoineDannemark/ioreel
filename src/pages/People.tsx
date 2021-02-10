@@ -3,49 +3,52 @@ import { useAppDispatch, useTypedSelector } from "../app/store";
 import { useAppContext } from "../context/Context";
 
 import {
-  fetchTenants,
-  createTenant,
-  updateTenant,
-  deleteTenant,
-} from "../Features/tenants/tenantsSlice";
+  fetchPeople,
+  createPerson,
+  updatePerson,
+  deletePerson,
+} from "../Features/people/peopleSlice";
 
-import { Tenant } from "../Features/tenants/types";
+import { Person } from "../Features/people/types";
 
-import TenantForm from "../Features/tenants/TenantForm";
-import TenantsList from "../Features/tenants/TenantsList";
+import PersonForm from "../Features/people/PersonForm";
+import PeopleList from "../Features/people/PeopleList";
 
 import { IonContent, IonAlert } from "@ionic/react";
 
-const Tenants = () => {
+const People = () => {
   const dispatch = useAppDispatch();
-  const tenants = useTypedSelector((state) => state.tenants.list);
+  const people = useTypedSelector((state) => state.people.list);
   const [editId, setEditId] = useState<number | null>(null);
   const [editValues, setEditValues] = useState<{
     firstname: string;
     lastname: string;
+    email: string;
   } | null>(null);
 
   const { dbReady, dbInitError, resetDbError } = useAppContext();
 
   useEffect(() => {
     if (dbReady) {
-      dispatch(fetchTenants());
+      dispatch(fetchPeople());
     }
   }, [dbReady, dispatch]);
 
   const handleSubmit = ({
     firstname,
     lastname,
+    email,
   }: {
     firstname: string;
     lastname: string;
+    email: string;
   }) => {
     if (editId) {
-      dispatch(updateTenant({ id: editId, firstname, lastname }));
+      dispatch(updatePerson({ id: editId, firstname, lastname, email }));
       setEditId(null);
       setEditValues(null);
     } else {
-      dispatch(createTenant({ firstname, lastname }));
+      dispatch(createPerson({ firstname, lastname, email }));
     }
   };
 
@@ -53,14 +56,14 @@ const Tenants = () => {
     editId && setEditId(null);
   };
 
-  const handleEdit = (tenant: Tenant) => {
-    let { id, firstname, lastname } = tenant;
+  const handleEdit = (tenant: Person) => {
+    let { id, firstname, lastname, email } = tenant;
     setEditId(id!);
-    setEditValues({ firstname, lastname });
+    setEditValues({ firstname, lastname, email });
   };
 
   const handleDelete = (id: number) => {
-    dispatch(deleteTenant(id));
+    dispatch(deletePerson(id));
   };
 
   return (
@@ -71,20 +74,16 @@ const Tenants = () => {
         header={!!dbInitError ? dbInitError.header : undefined}
         message={!!dbInitError ? dbInitError.message : undefined}
       />
-      <TenantForm
+      <PersonForm
         onSubmit={handleSubmit}
         onReset={handleReset}
         editId={editId}
         editValues={editValues}
         dbReady={dbReady}
       />
-      <TenantsList
-        tenants={tenants}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <PeopleList people={people} onEdit={handleEdit} onDelete={handleDelete} />
     </IonContent>
   );
 };
 
-export default Tenants;
+export default People;

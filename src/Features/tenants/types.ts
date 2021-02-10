@@ -1,5 +1,5 @@
 export type Tenant = {
-  id: number;
+  id?: number;
   firstname: string;
   lastname: string;
 };

@@ -21,7 +21,7 @@ const TenantItem: React.FC<Props> = ({
         <IonIcon icon={create} />
       </IonButton>
       <IonButton
-        onClick={() => onDeleteBtnClick && onDeleteBtnClick(tenant.id)}
+        onClick={() => onDeleteBtnClick && onDeleteBtnClick(tenant.id!)}
       >
         <IonIcon icon={trashOutline} />
       </IonButton>
