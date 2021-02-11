@@ -1,6 +1,6 @@
+import "reflect-metadata";
 import React from "react";
 import { render } from "react-dom";
-import { InsertResult, UpdateResult, DeleteResult } from "typeorm";
 
 import { Provider } from "react-redux";
 import store from "./app/store";
@@ -9,30 +9,19 @@ import ContextProvider from "./context/Context";
 import * as serviceWorker from "./serviceWorker";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 
-import "reflect-metadata";
+import type { Api } from "./api/index";
 
-interface log {
-  type: "info" | "warn" | "error";
-  message: string;
-}
+// interface log {
+//   type: "info" | "warn" | "error";
+//   message: string;
+// }
 
 // TODO This should (probably) be declared elsewhere
 // + interface the api + replace 'any'
 // https://stackoverflow.com/questions/56457935/typescript-error-property-x-does-not-exist-on-type-window/56458070
 declare global {
   interface Window {
-    api: {
-      fetchPeople: () => Promise<any>;
-      createPerson: (person: any) => Promise<InsertResult>;
-      updatePerson: (id: number, data: any) => Promise<UpdateResult>;
-      deletePerson: (id: number) => Promise<DeleteResult>;
-      fetchTenants: () => Promise<any>;
-      createTenant: (tenant: any) => Promise<InsertResult>;
-      updateTenant: (id: number, data: any) => Promise<UpdateResult>;
-      removeTenant: (id: number) => Promise<DeleteResult>;
-      initDB: (platform: any) => Promise<any>;
-      log?: (log: log) => void;
-    };
+    api: Api;
   }
 }
 
