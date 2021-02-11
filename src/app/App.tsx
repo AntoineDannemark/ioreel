@@ -18,7 +18,7 @@ import { dbInitError } from "../context/Context";
 import Tenants from "../pages/Tenants";
 import People from "../pages/People";
 
-import { log } from "../utils/Logger";
+// import { log } from "../utils/Logger";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -70,7 +70,7 @@ const App: React.FC = () => {
   // Init DB at mount
   useEffect(() => {
     initDb(setDbReady, setDbInitError);
-    log("success");
+    // log("success");
   }, [setDbInitError, setDbReady]);
 
   return (
