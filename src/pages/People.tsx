@@ -14,7 +14,8 @@ import { Person } from "../Features/people/types";
 import PersonForm from "../Features/people/PersonForm";
 import PeopleList from "../Features/people/PeopleList";
 
-import { IonContent, IonAlert } from "@ionic/react";
+import { IonContent, IonAlert, IonButton } from "@ionic/react";
+import Input from "../commons/Input";
 
 const People = () => {
   const dispatch = useAppDispatch();
@@ -66,8 +67,38 @@ const People = () => {
     dispatch(deletePerson(id));
   };
 
+  const addPhone = async () => {
+    const result = await window.api.person.addPhone(1, {
+      prefix: 33,
+      number: 123456,
+    });
+
+    console.log(result);
+  };
+
+  const addAddress = async () => {
+    const result = await window.api.person.addAddress(1, {
+      street: "rue de joie",
+      number: 748,
+      city: "liège le piège",
+      zip: 4000,
+      country: "Belgium",
+    });
+
+    console.log(result);
+  };
+
+  const getJohn = async () => {
+    const john = await window.api.person.findByName("john", "doe");
+
+    console.log(john);
+  };
+
   return (
     <IonContent>
+      <IonButton onClick={addPhone}>submit phone</IonButton>
+      <IonButton onClick={addAddress}>submit address</IonButton>
+      <IonButton onClick={getJohn}>getJohn</IonButton>
       <IonAlert
         isOpen={!!dbInitError}
         onDidDismiss={() => resetDbError}
