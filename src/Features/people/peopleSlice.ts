@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Person } from './types'
+// import { Person } from '../../api/entity/Person'
 import { ASYNC_ACTIONS_STATUS } from '../../core/constants'
 
 const { IDLE, PENDING } = ASYNC_ACTIONS_STATUS
@@ -38,13 +39,7 @@ export const fetchPeople = createAsyncThunk(
 export const createPerson = createAsyncThunk(
     'people/create',
     async ({firstname, lastname, email }: Person) => {
-        const { raw } = await window.api.createPerson({firstname, lastname, email})
-        return {
-            id: raw,
-            firstname, 
-            lastname,
-            email,
-        }
+        return await window.api.createPerson({firstname, lastname, email})
     }
 )
 
@@ -89,12 +84,7 @@ const peopleSlice = createSlice({
             })
             .addCase(
                 createPerson.fulfilled, 
-                (state, { payload }: PayloadAction<{ 
-                    id: number; 
-                    firstname: string; 
-                    lastname: string; 
-                    email: string;
-                }>) => {
+                (state, { payload }: PayloadAction<any>) => {
                     state.list.push(payload)
                     state.addStatus = IDLE
                 }
