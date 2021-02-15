@@ -49,7 +49,7 @@ const initDb = async (
 ) => {
   if (!isPlatform("cordova") && !isPlatform("electron")) return;
   if (isPlatform("cordova")) {
-    window.api = require("../api").api;
+    window.api = require("../api").default;
   }
 
   const res = await window.api.initDB(getDriver());
