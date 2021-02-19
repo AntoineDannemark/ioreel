@@ -31,19 +31,19 @@ const initialState: TenantsState = {
 export const fetchTenants = createAsyncThunk(
     'tenants/fetch',
     async () => {
-        return await window.api.fetchTenants();
+        // return await window.api.fetchTenants();
     }
 )
 
 export const createTenant = createAsyncThunk(
     'tenants/create',
     async ({firstname, lastname}: Tenant) => {
-        const { raw } = await window.api.createTenant({firstname, lastname})
-        return {
-            id: raw,
-            firstname, 
-            lastname,
-        }
+        // const { raw } = await window.api.createTenant({firstname, lastname})
+        // return {
+        //     id: raw,
+        //     firstname, 
+        //     lastname,
+        // }
     }
 )
 
@@ -51,7 +51,7 @@ export const updateTenant = createAsyncThunk(
     'tenants/update',
     async (tenant: Tenant) => {
         const { id, ...rest } = tenant
-        await window.api.updateTenant(id!, rest)
+        // await window.api.updateTenant(id!, rest)
         return tenant
     }
 )
@@ -59,7 +59,7 @@ export const updateTenant = createAsyncThunk(
 export const deleteTenant = createAsyncThunk(
     'tenants/delete',
     async (id: number) => {
-        await window.api.removeTenant(id)
+        // await window.api.removeTenant(id)
         return id
     }
 )
@@ -71,62 +71,62 @@ const tenantsSlice = createSlice({
 
     },
     extraReducers: builder => {
-        builder
-            .addCase(fetchTenants.pending, (state) => {
-                state.fetchStatus = PENDING
-                state.fetchError = null
-            })
-            .addCase(fetchTenants.fulfilled, (state, { payload }: PayloadAction<Tenant[]>) => {
-                state.list = payload
-                state.fetchStatus = IDLE
-            })
-            .addCase(fetchTenants.rejected, (state, { error }) => {
-                state.fetchError = error.toString()
-                state.fetchStatus = IDLE
-            })
-            .addCase(createTenant.pending, (state) => {
-                state.addStatus = PENDING
-                state.addError = null
-            })
-            .addCase(
-                createTenant.fulfilled, 
-                (state, { payload }: PayloadAction<{ 
-                    id: number; 
-                    firstname: string; 
-                    lastname: string; 
-                }>) => {
-                    state.list.push(payload)
-                    state.addStatus = IDLE
-                }
-            )
-            .addCase(createTenant.rejected, (state, { error }) => {
-                state.addError = error.toString()
-                state.addStatus = IDLE
-            })
-            .addCase(updateTenant.pending, (state) => {
-                state.updateStatus = PENDING
-                state.updateError = null
-            })
-            .addCase(updateTenant.fulfilled, (state, { payload }: PayloadAction<Tenant>) => {
-                state.list = state.list.map(t => t.id === payload.id ? payload : t)
-                state.updateStatus = IDLE
-            })
-            .addCase(updateTenant.rejected, (state, { error }) => {
-                state.updateError = error.toString()
-                state.updateStatus = IDLE
-            })
-            .addCase(deleteTenant.pending, (state) => {
-                state.deleteStatus = PENDING
-                state.deleteError = null
-            })
-            .addCase(deleteTenant.fulfilled, (state, { payload }: PayloadAction<any>) => {
-                state.list = state.list.filter(t => t.id !== payload)
-                state.deleteStatus = IDLE
-            })
-            .addCase(deleteTenant.rejected, (state, { error }) => {
-                state.deleteError = error.toString()
-                state.deleteStatus = IDLE
-            })
+        // builder
+        //     .addCase(fetchTenants.pending, (state) => {
+        //         state.fetchStatus = PENDING
+        //         state.fetchError = null
+        //     })
+        //     .addCase(fetchTenants.fulfilled, (state, { payload }: PayloadAction<Tenant[]>) => {
+        //         state.list = payload
+        //         state.fetchStatus = IDLE
+        //     })
+        //     .addCase(fetchTenants.rejected, (state, { error }) => {
+        //         state.fetchError = error.toString()
+        //         state.fetchStatus = IDLE
+        //     })
+        //     .addCase(createTenant.pending, (state) => {
+        //         state.addStatus = PENDING
+        //         state.addError = null
+        //     })
+        //     .addCase(
+        //         createTenant.fulfilled, 
+        //         (state, { payload }: PayloadAction<{ 
+        //             id: number; 
+        //             firstname: string; 
+        //             lastname: string; 
+        //         }>) => {
+        //             state.list.push(payload)
+        //             state.addStatus = IDLE
+        //         }
+        //     )
+        //     .addCase(createTenant.rejected, (state, { error }) => {
+        //         state.addError = error.toString()
+        //         state.addStatus = IDLE
+        //     })
+        //     .addCase(updateTenant.pending, (state) => {
+        //         state.updateStatus = PENDING
+        //         state.updateError = null
+        //     })
+        //     .addCase(updateTenant.fulfilled, (state, { payload }: PayloadAction<Tenant>) => {
+        //         state.list = state.list.map(t => t.id === payload.id ? payload : t)
+        //         state.updateStatus = IDLE
+        //     })
+        //     .addCase(updateTenant.rejected, (state, { error }) => {
+        //         state.updateError = error.toString()
+        //         state.updateStatus = IDLE
+        //     })
+        //     .addCase(deleteTenant.pending, (state) => {
+        //         state.deleteStatus = PENDING
+        //         state.deleteError = null
+        //     })
+        //     .addCase(deleteTenant.fulfilled, (state, { payload }: PayloadAction<any>) => {
+        //         state.list = state.list.filter(t => t.id !== payload)
+        //         state.deleteStatus = IDLE
+        //     })
+        //     .addCase(deleteTenant.rejected, (state, { error }) => {
+        //         state.deleteError = error.toString()
+        //         state.deleteStatus = IDLE
+        //     })
     }   
 })
 

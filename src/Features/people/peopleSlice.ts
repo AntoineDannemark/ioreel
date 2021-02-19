@@ -32,14 +32,14 @@ const initialState: PeopleState = {
 export const fetchPeople = createAsyncThunk(
     'people/fetch',
     async () => {
-        return await window.api.fetchPeople();
+        // return await window.api.fetchPeople();
     }
 )
 
 export const createPerson = createAsyncThunk(
     'people/create',
     async ({firstname, lastname, email }: Person) => {
-        return await window.api.createPerson({firstname, lastname, email})
+        // return await window.api.createPerson({firstname, lastname, email})
     }
 )
 
@@ -47,7 +47,7 @@ export const updatePerson = createAsyncThunk(
     'people/update',
     async (person: Person) => {
         const { id, ...rest } = person
-        await window.api.updatePerson(id!, rest)
+        // await window.api.updatePerson(id!, rest)
         return person
     }
 )
@@ -55,7 +55,7 @@ export const updatePerson = createAsyncThunk(
 export const deletePerson = createAsyncThunk(
     'people/delete',
     async (id: number) => {
-        await window.api.deletePerson(id)
+        // await window.api.deletePerson(id)
         return id
     }
 )
@@ -65,58 +65,58 @@ const peopleSlice = createSlice({
     initialState,
     reducers: {},
     extraReducers: builder => {
-        builder
-            .addCase(fetchPeople.pending, (state) => {
-                state.fetchStatus = PENDING
-                state.fetchError = null
-            })
-            .addCase(fetchPeople.fulfilled, (state, { payload }: PayloadAction<Person[]>) => {
-                state.list = payload
-                state.fetchStatus = IDLE
-            })
-            .addCase(fetchPeople.rejected, (state, { error }) => {
-                state.fetchError = error.toString()
-                state.fetchStatus = IDLE
-            })
-            .addCase(createPerson.pending, (state) => {
-                state.addStatus = PENDING
-                state.addError = null
-            })
-            .addCase(
-                createPerson.fulfilled, 
-                (state, { payload }: PayloadAction<any>) => {
-                    state.list.push(payload)
-                    state.addStatus = IDLE
-                }
-            )
-            .addCase(createPerson.rejected, (state, { error }) => {
-                state.addError = error.toString()
-                state.addStatus = IDLE
-            })
-            .addCase(updatePerson.pending, (state) => {
-                state.updateStatus = PENDING
-                state.updateError = null
-            })
-            .addCase(updatePerson.fulfilled, (state, { payload }: PayloadAction<Person>) => {
-                state.list = state.list.map(t => t.id === payload.id ? payload : t)
-                state.updateStatus = IDLE
-            })
-            .addCase(updatePerson.rejected, (state, { error }) => {
-                state.updateError = error.toString()
-                state.updateStatus = IDLE
-            })
-            .addCase(deletePerson.pending, (state) => {
-                state.deleteStatus = PENDING
-                state.deleteError = null
-            })
-            .addCase(deletePerson.fulfilled, (state, { payload }: PayloadAction<any>) => {
-                state.list = state.list.filter(t => t.id !== payload)
-                state.deleteStatus = IDLE
-            })
-            .addCase(deletePerson.rejected, (state, { error }) => {
-                state.deleteError = error.toString()
-                state.deleteStatus = IDLE
-            })
+        // builder
+        //     .addCase(fetchPeople.pending, (state) => {
+        //         state.fetchStatus = PENDING
+        //         state.fetchError = null
+        //     })
+        //     .addCase(fetchPeople.fulfilled, (state, { payload }: PayloadAction<Person[]>) => {
+        //         state.list = payload
+        //         state.fetchStatus = IDLE
+        //     })
+        //     .addCase(fetchPeople.rejected, (state, { error }) => {
+        //         state.fetchError = error.toString()
+        //         state.fetchStatus = IDLE
+        //     })
+        //     .addCase(createPerson.pending, (state) => {
+        //         state.addStatus = PENDING
+        //         state.addError = null
+        //     })
+        //     .addCase(
+        //         createPerson.fulfilled, 
+        //         (state, { payload }: PayloadAction<any>) => {
+        //             state.list.push(payload)
+        //             state.addStatus = IDLE
+        //         }
+        //     )
+        //     .addCase(createPerson.rejected, (state, { error }) => {
+        //         state.addError = error.toString()
+        //         state.addStatus = IDLE
+        //     })
+        //     .addCase(updatePerson.pending, (state) => {
+        //         state.updateStatus = PENDING
+        //         state.updateError = null
+        //     })
+        //     .addCase(updatePerson.fulfilled, (state, { payload }: PayloadAction<Person>) => {
+        //         state.list = state.list.map(t => t.id === payload.id ? payload : t)
+        //         state.updateStatus = IDLE
+        //     })
+        //     .addCase(updatePerson.rejected, (state, { error }) => {
+        //         state.updateError = error.toString()
+        //         state.updateStatus = IDLE
+        //     })
+        //     .addCase(deletePerson.pending, (state) => {
+        //         state.deleteStatus = PENDING
+        //         state.deleteError = null
+        //     })
+        //     .addCase(deletePerson.fulfilled, (state, { payload }: PayloadAction<any>) => {
+        //         state.list = state.list.filter(t => t.id !== payload)
+        //         state.deleteStatus = IDLE
+        //     })
+        //     .addCase(deletePerson.rejected, (state, { error }) => {
+        //         state.deleteError = error.toString()
+        //         state.deleteStatus = IDLE
+        //     })
     }
 })
 

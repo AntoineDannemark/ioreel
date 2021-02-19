@@ -31,7 +31,7 @@ const People = () => {
 
   useEffect(() => {
     if (dbReady) {
-      dispatch(fetchPeople());
+      //   dispatch(fetchPeople());
     }
   }, [dbReady, dispatch]);
 
@@ -67,38 +67,83 @@ const People = () => {
     dispatch(deletePerson(id));
   };
 
+  //   const addPhone = async () => {
+  //     const result = await window.api.person.addPhone(1, {
+  //       prefix: 33,
+  //       number: 123456,
+  //     });
+
+  //     console.log(result);
+  //   };
+
+  //   const addAddress = async () => {
+  //     const result = await window.api.person.addAddress(1, {
+  //       street: "rue de joie",
+  //       number: 748,
+  //       city: "liège le piège",
+  //       zip: 4000,
+  //       country: "Belgium",
+  //     });
+
+  //     console.log(result);
+  //   };
+
+  //   const getJohn = async () => {
+  //     const john = await window.api.person.findByName("john", "doe");
+
+  //     console.log(john);
+  //   };
+
+  const createJohn = async () => {
+    let john = {
+      firstname: "john",
+      lastname: "doe",
+      birthDate: new Date(1984, 10, 17).toISOString(),
+      birthPlace: "malmedy",
+      email: "john.doe@test.com",
+      gender: "m",
+      bankAccount: "BE63543543254",
+      bankCode: "BBRUEB",
+      comment: "John est un sacré lascar!",
+    };
+    const res = await window.api.person.create(john);
+
+    console.log(res);
+  };
+
+  //   const createPhone = async () => {
+  //     let phone = {
+  //       prefix: 32,
+  //       number: 65873254,
+  //     };
+
+  //     const res = await window.api.phone.create(phone);
+
+  //     console.log(res);
+  //   };
+
   const addPhone = async () => {
-    const result = await window.api.person.addPhone(1, {
-      prefix: 33,
-      number: 123456,
-    });
+    let phone = {
+      prefix: 32,
+      number: 65873254,
+    };
 
-    console.log(result);
+    const res = await window.api.person.addPhone(1, phone);
+
+    console.log(res);
   };
 
-  const addAddress = async () => {
-    const result = await window.api.person.addAddress(1, {
-      street: "rue de joie",
-      number: 748,
-      city: "liège le piège",
-      zip: 4000,
-      country: "Belgium",
-    });
+  const fetchAllPersons = async () => {
+    const res = await window.api.person.fetchAll();
 
-    console.log(result);
-  };
-
-  const getJohn = async () => {
-    const john = await window.api.person.findByName("john", "doe");
-
-    console.log(john);
+    console.log(res);
   };
 
   return (
     <IonContent>
-      <IonButton onClick={addPhone}>submit phone</IonButton>
-      <IonButton onClick={addAddress}>submit address</IonButton>
-      <IonButton onClick={getJohn}>getJohn</IonButton>
+      <IonButton onClick={createJohn}>create John</IonButton>
+      <IonButton onClick={fetchAllPersons}>fetchAllPersons</IonButton>
+      <IonButton onClick={addPhone}>addPhone</IonButton>
       <IonAlert
         isOpen={!!dbInitError}
         onDidDismiss={() => resetDbError}
