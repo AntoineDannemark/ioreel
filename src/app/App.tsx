@@ -15,7 +15,6 @@ import { useAppContext } from "../context/Context";
 
 import { dbInitError } from "../context/Context";
 
-import Tenants from "../pages/Tenants";
 import People from "../pages/People";
 
 // import { log } from "../utils/Logger";
@@ -78,7 +77,6 @@ const App: React.FC = () => {
       <Router>
         <IonRouterOutlet>
           <Route exact path="/" render={() => <Redirect to="/people" />} />
-          <Route path="/tenants" component={Tenants} exact={true} />
           <Route path="/people" component={People} exact={true} />
         </IonRouterOutlet>
       </Router>
