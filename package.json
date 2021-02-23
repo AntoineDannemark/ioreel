@@ -86,9 +86,15 @@
     "workbox-webpack-plugin": "4.3.1"
   },
   "scripts": {
-    "start": "cross-env HOST=0.0.0.0 PORT=8100 NODE_PATH=src node scripts/start.js",
-    "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "start": "node scripts/start.js",
+    "test": "node scripts/test.js",
+    "dev": "cross-env HOST=0.0.0.0 PORT=8100 node scripts/start.js",
+    "config-cap-dev": "node config/generateCapacitorConfig dev",
+    "config-cap-prod": "node config/generateCapacitorConfig",
+    "live-android": "npm run config-cap-dev && npx cap sync android && npx cap open android",
+    "live-electron": "npm run config-cap-dev && npx cap sync @capacitor-community/electron && npx cap open @capacitor-community/electron",
+    "build-local-mobile": "npm run config-cap-prod && cross-env IS_LOCAL_MOBILE=true SHOULD_INCLUDE_API=true node scripts/build.js && npx cap sync",
+    "build": "cross-env IS_LOCAL_MOBILE=false SHOULD_INCLUDE_API=false node scripts/build.js && npx cap sync"
   },
   "eslintConfig": {
     "extends": "react-app"

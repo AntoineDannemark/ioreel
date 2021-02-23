@@ -59,6 +59,32 @@ module.exports = function(webpackEnv) {
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes('--profile');
 
+// If the build is for mobile use with local database, 
+// we need to disable mangling of the function names
+// Otherwise typeorm will mess with our entities 
+const isLocalMobile = process.env.IS_LOCAL_MOBILE;
+
+// We only need to include the api code in the client 
+// when building for local mobile
+const shouldIncludeApi = process.env.SHOULD_INCLUDE_API
+
+const getManglingOpts = () => {
+    if (isLocalMobile)  {
+        return {
+            keep_fnames: true,                
+        }
+    } else {
+        return {
+            safari10: true, 
+        }
+    }
+}
+
+console.log('-----------------------')
+console.log("isLocalMobile", isLocalMobile)
+console.log("shouldIncludeApi", shouldIncludeApi)
+console.log('-----------------------')
+
   // We will provide `paths.publicUrlOrPath` to our app
   // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
   // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
@@ -219,10 +245,7 @@ module.exports = function(webpackEnv) {
               // https://github.com/terser-js/terser/issues/120
               inline: 2,
             },
-            mangle: false,
-            // mangle: {
-            //   safari10: true, 
-            // },
+            mangle: getManglingOpts(),
             // Added for profiling in devtools
             keep_classnames: isEnvProductionProfile,
             keep_fnames: isEnvProductionProfile,
@@ -363,6 +386,7 @@ module.exports = function(webpackEnv) {
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
+              exclude: shouldIncludeApi ? null : path.join(paths.appApi, '/**/**'),
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
