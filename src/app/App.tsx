@@ -40,18 +40,17 @@ import "../theme/variables.css";
 
 const Router = isPlatform("electron") ? IonReactHashRouter : IonReactRouter;
 
-const getDriver = () => (isPlatform("cordova") ? "cordova" : "sqlite");
-
-const initDb = async (
+const testDB = async (
   dbReadySetter: React.Dispatch<React.SetStateAction<boolean>>,
   errorSetter: React.Dispatch<React.SetStateAction<dbInitError | null>>
 ) => {
-  if (!isPlatform("cordova") && !isPlatform("electron")) return;
-  if (isPlatform("cordova")) {
-    window.api = require("../api").default;
+  const isServerless = !!+process.env.IS_SLS!;
+
+  if (!isServerless && isPlatform("cordova")) {
+    window.api = require("../app/test").api;
   }
 
-  const res = await window.api.initDB(getDriver());
+  const res = await window.api.utils.testDBConnection();
 
   if (res.dbReady) {
     dbReadySetter(true);
@@ -68,8 +67,7 @@ const App: React.FC = () => {
 
   // Init DB at mount
   useEffect(() => {
-    initDb(setDbReady, setDbInitError);
-    // log("success");
+    testDB(setDbReady, setDbInitError);
   }, [setDbInitError, setDbReady]);
 
   return (
