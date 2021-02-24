@@ -15,7 +15,6 @@ import PersonForm from "../Features/people/PersonForm";
 import PeopleList from "../Features/people/PeopleList";
 
 import { IonContent, IonAlert, IonButton } from "@ionic/react";
-import Input from "../commons/Input";
 
 const People = () => {
   const dispatch = useAppDispatch();
@@ -106,9 +105,9 @@ const People = () => {
       bankCode: "BBRUEB",
       comment: "John est un sacré lascar!",
     };
-    const res = await window.api.person.create(john);
+    // const res = await window.api.person.create(john);
 
-    console.log(res);
+    // console.log(res);
   };
 
   //   const createPhone = async () => {
@@ -139,8 +138,15 @@ const People = () => {
     console.log(res);
   };
 
+  const getEnv = async () => {
+    const res = await window.api.utils.env();
+
+    console.log(res);
+  };
+
   return (
     <IonContent>
+      <IonButton onClick={getEnv}>env</IonButton>
       <IonButton onClick={createJohn}>create John</IonButton>
       <IonButton onClick={fetchAllPersons}>fetchAllPersons</IonButton>
       <IonButton onClick={addPhone}>addPhone</IonButton>
