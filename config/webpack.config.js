@@ -62,11 +62,11 @@ module.exports = function(webpackEnv) {
 // If the build is for mobile use with local database, 
 // we need to disable mangling of the function names
 // Otherwise typeorm will mess with our entities 
-const isLocalMobile = process.env.IS_LOCAL_MOBILE;
+const isLocalMobile = !!+process.env.IS_LOCAL_MOBILE;
 
 // We only need to include the api code in the client 
 // when building for local mobile
-const shouldIncludeApi = process.env.SHOULD_INCLUDE_API
+const shouldIncludeApi = !!+process.env.SHOULD_INCLUDE_API
 
 const getManglingOpts = () => {
     if (isLocalMobile)  {
@@ -386,7 +386,7 @@ console.log('-----------------------')
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              exclude: shouldIncludeApi ? null : path.join(paths.appApi, '/**/**'),
+              exclude: shouldIncludeApi ? [] : paths.appApi,
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
