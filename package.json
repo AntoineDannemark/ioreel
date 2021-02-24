@@ -88,13 +88,13 @@
   "scripts": {
     "start": "node scripts/start.js",
     "test": "node scripts/test.js",
-    "dev": "cross-env HOST=0.0.0.0 PORT=8100 node scripts/start.js",
-    "config-cap-dev": "node config/generateCapacitorConfig dev",
-    "config-cap-prod": "node config/generateCapacitorConfig",
+    "dev": "cross-env HOST=0.0.0.0 PORT=8100 SHOULD_INCLUDE_API=1 node scripts/start.js",
+    "config-cap-dev": "node config/getCapConfig dev",
+    "config-cap-prod": "node config/getCapConfig",
     "live-android": "npm run config-cap-dev && npx cap sync android && npx cap open android",
-    "live-electron": "npm run config-cap-dev && npx cap sync @capacitor-community/electron && npx cap open @capacitor-community/electron",
-    "build-local-mobile": "npm run config-cap-prod && cross-env IS_LOCAL_MOBILE=true SHOULD_INCLUDE_API=true node scripts/build.js && npx cap sync",
-    "build": "cross-env IS_LOCAL_MOBILE=false SHOULD_INCLUDE_API=false node scripts/build.js && npx cap sync"
+    "live-electron": "npm run config-cap-dev && npx cap sync electron && npx cap open @capacitor-community/electron",
+    "build-local-mobile": "npm run config-cap-prod && cross-env IS_LOCAL_MOBILE=1 SHOULD_INCLUDE_API=1 node scripts/build.js && npx cap sync",
+    "build": "npm run config-cap-prod && cross-env IS_LOCAL_MOBILE=0 SHOULD_INCLUDE_API=0 node scripts/build.js && npx cap sync"
   },
   "eslintConfig": {
     "extends": "react-app"
