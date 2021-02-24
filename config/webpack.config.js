@@ -59,17 +59,20 @@ module.exports = function(webpackEnv) {
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes('--profile');
 
+
+
+
+// We only need to include the api code in the client 
+// when building for local mobile (and also for developing)
+const isServerless = !!+process.env.IS_SLS;
+const isMobileOrDev = !!+process.env.IS_MOBILE_OR_DEV;
+const shouldIncludeApi = !isServerless && isMobileOrDev;
+
 // If the build is for mobile use with local database, 
 // we need to disable mangling of the function names
 // Otherwise typeorm will mess with our entities 
-const isLocalMobile = !!+process.env.IS_LOCAL_MOBILE;
-
-// We only need to include the api code in the client 
-// when building for local mobile
-const shouldIncludeApi = !!+process.env.SHOULD_INCLUDE_API
-
 const getManglingOpts = () => {
-    if (isLocalMobile)  {
+    if (shouldIncludeApi)  {
         return {
             keep_fnames: true,                
         }
@@ -80,10 +83,7 @@ const getManglingOpts = () => {
     }
 }
 
-console.log('-----------------------')
-console.log("isLocalMobile", isLocalMobile)
 console.log("shouldIncludeApi", shouldIncludeApi)
-console.log('-----------------------')
 
   // We will provide `paths.publicUrlOrPath` to our app
   // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
@@ -182,6 +182,7 @@ console.log('-----------------------')
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
     ].filter(Boolean),
+    // externals: shouldIncludeApi ? [] : '../api', 
     output: {
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
@@ -364,6 +365,7 @@ console.log('-----------------------')
             },
           ],
           include: paths.appSrc,
+          exclude: shouldIncludeApi ? [] : paths.appApi
         },
         {
           // "oneOf" will traverse all following loaders until one will
