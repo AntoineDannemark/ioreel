@@ -105,21 +105,10 @@ const People = () => {
       bankCode: "BBRUEB",
       comment: "John est un sacré lascar!",
     };
-    // const res = await window.api.person.create(john);
+    const res = await window.api.person.create(john);
 
-    // console.log(res);
+    console.log(res);
   };
-
-  //   const createPhone = async () => {
-  //     let phone = {
-  //       prefix: 32,
-  //       number: 65873254,
-  //     };
-
-  //     const res = await window.api.phone.create(phone);
-
-  //     console.log(res);
-  //   };
 
   const addPhone = async () => {
     let phone = {
