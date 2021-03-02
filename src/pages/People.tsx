@@ -75,17 +75,20 @@ const People = () => {
   //     console.log(result);
   //   };
 
-  //   const addAddress = async () => {
-  //     const result = await window.api.person.addAddress(1, {
-  //       street: "rue de joie",
-  //       number: 748,
-  //       city: "liège le piège",
-  //       zip: 4000,
-  //       country: "Belgium",
-  //     });
+  const addAddress = async () => {
+    const result = await window.api.person.addAddress({
+      id: 1,
+      address: {
+        street: "rue de joie",
+        number: 748,
+        city: "liège le piège",
+        zip: 4000,
+        country: "Belgium",
+      },
+    });
 
-  //     console.log(result);
-  //   };
+    console.log(result);
+  };
 
   //   const getJohn = async () => {
   //     const john = await window.api.person.findByName("john", "doe");
@@ -116,7 +119,7 @@ const People = () => {
       number: 65873254,
     };
 
-    const res = await window.api.person.addPhone(1, phone);
+    const res = await window.api.person.addPhone({ id: 1, phone });
 
     console.log(res);
   };
@@ -139,6 +142,7 @@ const People = () => {
       <IonButton onClick={createJohn}>create John</IonButton>
       <IonButton onClick={fetchAllPersons}>fetchAllPersons</IonButton>
       <IonButton onClick={addPhone}>addPhone</IonButton>
+      <IonButton onClick={addAddress}>addAddress</IonButton>
       <IonAlert
         isOpen={!!dbInitError}
         onDidDismiss={() => resetDbError}
