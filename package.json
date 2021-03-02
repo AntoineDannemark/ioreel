@@ -95,7 +95,8 @@
     "config-api": "node config/test test",
     "config-no-api": "node config/test",
     "live-android": "npm run config-cap-dev && npx cap sync android && npx cap open android",
-    "live-electron": "npm run config-cap-dev && npx cap sync electron && npx cap open @capacitor-community/electron",
+    "gen-electron-api": "node electron/core/api/generateIndex",
+    "live-electron": "npm run config-cap-dev && npx cap sync electron && npm run gen-electron-api && npx cap open @capacitor-community/electron",
     "build-local-mobile": "npm run config-cap-prod && npm run config-api && cross-env IS_MOBILE_OR_DEV=1 IS_SLS=0 node scripts/build.js && npx cap sync",
     "build-sls": "npm run config-cap-prod && npm run config-no-api && cross-env IS_SLS=1 node scripts/build.js && npx cap sync"
   },
