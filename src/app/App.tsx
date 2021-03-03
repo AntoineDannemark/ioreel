@@ -5,19 +5,23 @@ import {
   IonRouterOutlet,
   isPlatform,
   getPlatforms,
+  IonTabs,
+  IonTabBar,
+  IonTabButton,
+  IonIcon,
+  IonLabel,
 } from "@ionic/react";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
 // TODO check if library still needed
 // import { SQLite } from "@ionic-native/sqlite";
 
-import { useAppContext } from "../context/Context";
-
-import { dbInitError } from "../context/Context";
+import { useAppContext, dbInitError } from "../context/Context";
 
 import People from "../pages/People";
+import Units from "../pages/Units";
 
-// import { log } from "../utils/Logger";
+import { people, home } from "ionicons/icons";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -73,10 +77,27 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <Router>
-        <IonRouterOutlet>
-          <Route exact path="/" render={() => <Redirect to="/people" />} />
-          <Route path="/people" component={People} exact={true} />
-        </IonRouterOutlet>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Route exact path="/" render={() => <Redirect to="/people" />} />
+            <Route path="/people" exact={true}>
+              <People />
+            </Route>
+            <Route path="/units" exact={true}>
+              <Units />
+            </Route>
+          </IonRouterOutlet>
+          <IonTabBar slot={isPlatform("electron") ? "top" : "bottom"}>
+            <IonTabButton tab="tab1" href="/people">
+              <IonIcon icon={people} />
+              <IonLabel>people</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="tab2" href="/units">
+              <IonIcon icon={home} />
+              <IonLabel>units</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
       </Router>
     </IonApp>
   );
