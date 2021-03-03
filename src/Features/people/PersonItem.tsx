@@ -1,11 +1,11 @@
 import React from "react";
 import { IonItem, IonLabel, IonButton, IonIcon } from "@ionic/react";
 import { trashOutline, create } from "ionicons/icons";
-import type { Person } from "./types";
+import type { IPerson } from "../../api/person";
 
 interface Props {
-  person: Person;
-  onEditBtnClick: (person: Person) => void;
+  person: IPerson;
+  onEditBtnClick: (person: IPerson) => void;
   onDeleteBtnClick: (id: number) => void;
 }
 
