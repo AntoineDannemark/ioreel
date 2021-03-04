@@ -71,7 +71,7 @@ const App: React.FC = () => {
 
   // Init DB at mount
   useEffect(() => {
-    testDB(setDbReady, setDbInitError);
+    window.api && testDB(setDbReady, setDbInitError);
   }, [setDbInitError, setDbReady]);
 
   return (
@@ -79,20 +79,16 @@ const App: React.FC = () => {
       <Router>
         <IonTabs>
           <IonRouterOutlet>
+            <Route exact path="/people" component={People} />
+            <Route exact path="/units" component={Units} />
             <Route exact path="/" render={() => <Redirect to="/people" />} />
-            <Route path="/people" exact={true}>
-              <People />
-            </Route>
-            <Route path="/units" exact={true}>
-              <Units />
-            </Route>
           </IonRouterOutlet>
-          <IonTabBar slot={isPlatform("electron") ? "top" : "bottom"}>
-            <IonTabButton tab="tab1" href="/people">
+          <IonTabBar slot={"bottom"}>
+            <IonTabButton tab="people" href="/people">
               <IonIcon icon={people} />
               <IonLabel>people</IonLabel>
             </IonTabButton>
-            <IonTabButton tab="tab2" href="/units">
+            <IonTabButton tab="units" href="/units">
               <IonIcon icon={home} />
               <IonLabel>units</IonLabel>
             </IonTabButton>
