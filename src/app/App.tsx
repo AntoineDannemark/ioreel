@@ -48,12 +48,6 @@ const testDB = async (
   dbReadySetter: React.Dispatch<React.SetStateAction<boolean>>,
   errorSetter: React.Dispatch<React.SetStateAction<dbInitError | null>>
 ) => {
-  const isServerless = !!+process.env.IS_SLS!;
-
-  if (!isServerless && isPlatform("cordova")) {
-    window.api = require("../app/test").api;
-  }
-
   const res = await window.api.utils.testDBConnection();
 
   if (res.dbReady) {
@@ -71,7 +65,10 @@ const App: React.FC = () => {
 
   // Init DB at mount
   useEffect(() => {
-    window.api && testDB(setDbReady, setDbInitError);
+    if (!isPlatform("electron")) {
+      window.api = require("../api").default;
+    }
+    testDB(setDbReady, setDbInitError);
   }, [setDbInitError, setDbReady]);
 
   return (
