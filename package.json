@@ -89,17 +89,15 @@
   "scripts": {
     "start": "node scripts/start.js",
     "test": "node scripts/test.js",
-    "dev-local": "npm run config-api && cross-env HOST=0.0.0.0 PORT=8100 IS_SLS=0 IS_MOBILE_OR_DEV=1 node scripts/start.js",
-    "dev-sls": "npm run config-no-api && cross-env HOST=0.0.0.0 PORT=8100 IS_SLS=1 node scripts/start.js",
+    "dev-local": "cross-env HOST=0.0.0.0 PORT=8100 IS_SLS=0 IS_MOBILE_OR_DEV=1 node scripts/start.js",
+    "dev-sls": "cross-env HOST=0.0.0.0 PORT=8100 IS_SLS=1 node scripts/start.js",
     "config-cap-dev": "node config/getCapConfig dev",
     "config-cap-prod": "node config/getCapConfig",
-    "config-api": "node config/test test",
-    "config-no-api": "node config/test",
     "live-android": "npm run config-cap-dev && npx cap sync android && npx cap open android",
     "gen-electron-api": "node electron/core/api/generateIndex",
     "live-electron": "npm run config-cap-dev && npx cap sync electron && npm run gen-electron-api && npx cap open @capacitor-community/electron",
-    "build-local-mobile": "npm run config-cap-prod && npm run config-api && cross-env IS_MOBILE_OR_DEV=1 IS_SLS=0 node scripts/build.js && npx cap sync",
-    "build-sls": "npm run config-cap-prod && npm run config-no-api && cross-env IS_SLS=1 node scripts/build.js && npx cap sync"
+    "build-local-mobile": "npm run config-cap-prod && cross-env IS_MOBILE_OR_DEV=1 IS_SLS=0 node scripts/build.js && npx cap sync",
+    "build-sls": "npm run config-cap-prod && cross-env IS_SLS=1 node scripts/build.js && npx cap sync"
   },
   "eslintConfig": {
     "extends": "react-app"
