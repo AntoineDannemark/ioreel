@@ -55,7 +55,7 @@ const testDB = async (
   } else if (res.error) {
     errorSetter({
       header: `[${getPlatforms()[0]}] - DB Init Error`,
-      message: res.error,
+      message: JSON.stringify(res.error),
     });
   }
 };
