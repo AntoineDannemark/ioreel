@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
@@ -10,6 +10,10 @@ import {
   IonTabButton,
   IonIcon,
   IonLabel,
+  IonHeader,
+  IonCheckbox,
+  IonContent,
+  IonButton,
 } from "@ionic/react";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
@@ -48,6 +52,10 @@ const testDB = async (
   dbReadySetter: React.Dispatch<React.SetStateAction<boolean>>,
   errorSetter: React.Dispatch<React.SetStateAction<dbInitError | null>>
 ) => {
+  const get = await window.api.utils.getEndpoint(isPlatform("electron"));
+
+  console.log("GET", get);
+
   const res = await window.api.utils.testConnection();
 
   if (res.dbReady) {
@@ -62,7 +70,7 @@ const testDB = async (
 
 const App: React.FC = () => {
   const { setDbReady, setDbInitError } = useAppContext();
-
+  const [isLocal, setIsLocal] = useState(true);
   // Init DB at mount
   useEffect(() => {
     if (!isPlatform("electron")) {
@@ -71,26 +79,62 @@ const App: React.FC = () => {
     testDB(setDbReady, setDbInitError);
   }, [setDbInitError, setDbReady]);
 
+  const handleDbChange = async (isLocal: boolean) => {
+    await window.api.utils.setEndpoint(
+      isLocal ? "local" : "sls",
+      isPlatform("electron")
+    );
+    setIsLocal(isLocal);
+  };
+
+  const getisLocal = async () => {
+    const res = await window.api.utils.getEndpoint(isPlatform("electron"));
+
+    console.log(res);
+  };
+
   return (
     <IonApp>
       <Router>
-        <IonTabs>
-          <IonRouterOutlet>
-            <Route exact path="/people" component={People} />
-            <Route exact path="/units" component={Units} />
-            <Route exact path="/" render={() => <Redirect to="/people" />} />
-          </IonRouterOutlet>
-          <IonTabBar slot={"bottom"}>
-            <IonTabButton tab="people" href="/people">
-              <IonIcon icon={people} />
-              <IonLabel>people</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="units" href="/units">
-              <IonIcon icon={home} />
-              <IonLabel>units</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-        </IonTabs>
+        <IonHeader
+          style={{
+            height: "3rem",
+            backgroundColor: "black",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: "row",
+          }}
+        >
+          <IonCheckbox
+            value={"blah"}
+            checked={isLocal}
+            onIonChange={(e) => handleDbChange(e.detail.checked)}
+          />
+          <p style={{ margin: "1rem", color: "white" }}>
+            {isLocal ? " local" : " sls"}
+          </p>
+          <IonButton onClick={getisLocal}>TEST</IonButton>
+        </IonHeader>
+        <IonContent>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route exact path="/people" component={People} />
+              <Route exact path="/units" component={Units} />
+              <Route exact path="/" render={() => <Redirect to="/people" />} />
+            </IonRouterOutlet>
+            <IonTabBar slot={"bottom"}>
+              <IonTabButton tab="people" href="/people">
+                <IonIcon icon={people} />
+                <IonLabel>people</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="units" href="/units">
+                <IonIcon icon={home} />
+                <IonLabel>units</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </IonContent>
       </Router>
     </IonApp>
   );
