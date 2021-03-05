@@ -3,7 +3,7 @@
 // Stolen from :
 // https://gist.github.com/damienromito/e6b3930ffde4c7240f109d1de69febb5
 
-const ip = require('ip');
+const ip = require('./getLocalIp')();
 
 const fs = require('fs')
 const path = require('path')
@@ -16,7 +16,7 @@ let capacitorConfig = JSON.parse(rawdata)
 const arg = process.argv[2]
 if(arg === 'dev'){
   capacitorConfig.server = {
-    url: "http://" + ip.address() + ":8100",
+    url: "http://" + ip + ":8100",
     cleartext: true
   }
 }else{
