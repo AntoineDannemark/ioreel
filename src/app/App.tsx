@@ -69,8 +69,8 @@ const testDB = async (
 };
 
 const App: React.FC = () => {
-  const { setDbReady, setDbInitError } = useAppContext();
-  const [isLocal, setIsLocal] = useState(true);
+  const { dbType, setDbType, setDbReady, setDbInitError } = useAppContext();
+
   // Init DB at mount
   useEffect(() => {
     if (!isPlatform("electron")) {
@@ -80,11 +80,9 @@ const App: React.FC = () => {
   }, [setDbInitError, setDbReady]);
 
   const handleDbChange = async (isLocal: boolean) => {
-    await window.api.utils.setEndpoint(
-      isLocal ? "local" : "sls",
-      isPlatform("electron")
-    );
-    setIsLocal(isLocal);
+    const endpoint = isLocal ? "local" : "sls";
+    await window.api.utils.setEndpoint(endpoint, isPlatform("electron"));
+    setDbType(endpoint);
   };
 
   const getisLocal = async () => {
@@ -108,12 +106,10 @@ const App: React.FC = () => {
         >
           <IonCheckbox
             value={"blah"}
-            checked={isLocal}
+            checked={dbType === "local"}
             onIonChange={(e) => handleDbChange(e.detail.checked)}
           />
-          <p style={{ margin: "1rem", color: "white" }}>
-            {isLocal ? " local" : " sls"}
-          </p>
+          <p style={{ margin: "1rem", color: "white" }}>{dbType}</p>
           <IonButton onClick={getisLocal}>TEST</IonButton>
         </IonHeader>
         <IonContent>
