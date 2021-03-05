@@ -48,7 +48,7 @@ const testDB = async (
   dbReadySetter: React.Dispatch<React.SetStateAction<boolean>>,
   errorSetter: React.Dispatch<React.SetStateAction<dbInitError | null>>
 ) => {
-  const res = await window.api.utils.testDBConnection();
+  const res = await window.api.utils.testConnection();
 
   if (res.dbReady) {
     dbReadySetter(true);
