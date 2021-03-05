@@ -6,6 +6,8 @@ export interface dbInitError {
 }
 
 export type AppContextType = {
+  dbType: "local" | "sls" | undefined;
+  setDbType: React.Dispatch<React.SetStateAction<"local" | "sls" | undefined>>;
   dbReady: boolean;
   setDbReady: React.Dispatch<React.SetStateAction<boolean>>;
   dbInitError: dbInitError | null;
@@ -19,6 +21,7 @@ export const useAppContext = () => useContext(AppContext);
 const { Provider } = AppContext;
 
 const ContextProvider: React.FC = (props) => {
+  const [dbType, setDbType] = useState<"local" | "sls" | undefined>(undefined);
   const [dbReady, setDbReady] = useState<boolean>(false);
   const [dbInitError, setDbInitError] = useState<dbInitError | null>(null);
 
@@ -26,7 +29,15 @@ const ContextProvider: React.FC = (props) => {
 
   return (
     <Provider
-      value={{ dbReady, setDbReady, dbInitError, setDbInitError, resetDbError }}
+      value={{
+        dbType,
+        setDbType,
+        dbReady,
+        setDbReady,
+        dbInitError,
+        setDbInitError,
+        resetDbError,
+      }}
     >
       {props.children}
     </Provider>
