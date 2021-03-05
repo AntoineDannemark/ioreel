@@ -21,7 +21,7 @@ export const useAppContext = () => useContext(AppContext);
 const { Provider } = AppContext;
 
 const ContextProvider: React.FC = (props) => {
-  const [dbType, setDbType] = useState<"local" | "sls" | undefined>(undefined);
+  const [dbType, setDbType] = useState<"local" | "sls" | undefined>("local");
   const [dbReady, setDbReady] = useState<boolean>(false);
   const [dbInitError, setDbInitError] = useState<dbInitError | null>(null);
 
