@@ -20,7 +20,8 @@
     "downlevelIteration": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "strict": false,
+    "strictPropertyInitialization": false,
+    "strict": true,
   },
   "include": [
     "src"
