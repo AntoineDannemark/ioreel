@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
 import {
   IonApp,
@@ -52,10 +52,6 @@ const testDB = async (
   dbReadySetter: React.Dispatch<React.SetStateAction<boolean>>,
   errorSetter: React.Dispatch<React.SetStateAction<dbInitError | null>>
 ) => {
-  const get = await window.api.utils.getEndpoint(isPlatform("electron"));
-
-  console.log("GET", get);
-
   const res = await window.api.utils.testConnection();
 
   if (res.dbReady) {
@@ -85,7 +81,7 @@ const App: React.FC = () => {
     setDbType(endpoint);
   };
 
-  const getisLocal = async () => {
+  const getIsLocal = async () => {
     const res = await window.api.utils.getEndpoint(isPlatform("electron"));
 
     console.log(res);
@@ -105,12 +101,11 @@ const App: React.FC = () => {
           }}
         >
           <IonCheckbox
-            value={"blah"}
             checked={dbType === "local"}
             onIonChange={(e) => handleDbChange(e.detail.checked)}
           />
           <p style={{ margin: "1rem", color: "white" }}>{dbType}</p>
-          <IonButton onClick={getisLocal}>TEST</IonButton>
+          <IonButton onClick={getIsLocal}>TEST</IonButton>
         </IonHeader>
         <IonContent>
           <IonTabs>
