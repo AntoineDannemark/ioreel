@@ -59,7 +59,7 @@ export const updatePerson = createAsyncThunk(
 export const deletePerson = createAsyncThunk(
     'people/delete',
     async (id: number) => {
-        // await window.api.person.delete(id)
+        await window.api.person.softDelete(id)
         return id
     }
 )
