@@ -59,32 +59,6 @@ module.exports = function(webpackEnv) {
   const isEnvProductionProfile =
     isEnvProduction && process.argv.includes('--profile');
 
-
-
-
-// We only need to include the api code in the client 
-// when building for local mobile (and also for developing)
-const isServerless = !!+process.env.IS_SLS;
-const isMobileOrDev = !!+process.env.IS_MOBILE_OR_DEV;
-const shouldIncludeApi = !isServerless && isMobileOrDev;
-
-// If the build is for mobile use with local database, 
-// we need to disable mangling of the function names
-// Otherwise typeorm will mess with our entities 
-const getManglingOpts = () => {
-    if (shouldIncludeApi)  {
-        return {
-            keep_fnames: true,                
-        }
-    } else {
-        return {
-            safari10: true, 
-        }
-    }
-}
-
-console.log("shouldIncludeApi", shouldIncludeApi)
-
   // We will provide `paths.publicUrlOrPath` to our app
   // as %PUBLIC_URL% in `index.html` and `process.env.PUBLIC_URL` in JavaScript.
   // Omit trailing slash as %PUBLIC_URL%/xyz looks better than %PUBLIC_URL%xyz.
@@ -182,7 +156,6 @@ console.log("shouldIncludeApi", shouldIncludeApi)
       // initialization, it doesn't blow up the WebpackDevServer client, and
       // changing JS code would still trigger a refresh.
     ].filter(Boolean),
-    // externals: shouldIncludeApi ? [] : '../api', 
     output: {
       // The build folder.
       path: isEnvProduction ? paths.appBuild : undefined,
@@ -246,7 +219,10 @@ console.log("shouldIncludeApi", shouldIncludeApi)
               // https://github.com/terser-js/terser/issues/120
               inline: 2,
             },
-            mangle: getManglingOpts(),
+            mangle: {
+                keep_fnames: true,  
+                safari10: true, 
+            },
             // Added for profiling in devtools
             keep_classnames: isEnvProductionProfile,
             keep_fnames: isEnvProductionProfile,
@@ -365,7 +341,6 @@ console.log("shouldIncludeApi", shouldIncludeApi)
             },
           ],
           include: paths.appSrc,
-          exclude: shouldIncludeApi ? [] : paths.appApi
         },
         {
           // "oneOf" will traverse all following loaders until one will
@@ -388,7 +363,6 @@ console.log("shouldIncludeApi", shouldIncludeApi)
             {
               test: /\.(js|mjs|jsx|ts|tsx)$/,
               include: paths.appSrc,
-              exclude: shouldIncludeApi ? [] : paths.appApi,
               loader: require.resolve('babel-loader'),
               options: {
                 customize: require.resolve(
