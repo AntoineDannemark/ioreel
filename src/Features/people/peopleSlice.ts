@@ -1,8 +1,8 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IPerson, Person } from '../../api/person';
-import { ASYNC_ACTIONS_STATUS } from '../../core/constants'
+import { ASYNC_ACTIONS_STATUS } from '../../core/constants';
 
-const { IDLE, PENDING } = ASYNC_ACTIONS_STATUS
+const { IDLE, PENDING } = ASYNC_ACTIONS_STATUS;
 
 interface PeopleState {
     list: IPerson[],
@@ -14,7 +14,7 @@ interface PeopleState {
     updateError: string | null;
     deleteStatus: typeof IDLE | typeof PENDING;
     deleteError: string | null;
-}
+};
 
 const initialState: PeopleState = {
     list: [],
@@ -26,14 +26,14 @@ const initialState: PeopleState = {
     updateError: null,
     deleteStatus: IDLE,
     deleteError: null,
-}
+};
 
 export const fetchPeople = createAsyncThunk(
     'people/fetch',
     async () => {
         return await window.api.person.fetchAll();
     }
-)
+);
 
 export const createPerson = createAsyncThunk(
     'people/create',
@@ -45,7 +45,7 @@ export const createPerson = createAsyncThunk(
             ...person,
         }
     }
-)
+);
 
 export const updatePerson = createAsyncThunk(
     'people/update',
@@ -64,7 +64,7 @@ export const deletePerson = createAsyncThunk(
     }
 )
 
-const peopleSlice = createSlice({
+export const peopleSlice = createSlice({
     name: 'people',
     initialState,
     reducers: {},
@@ -122,6 +122,4 @@ const peopleSlice = createSlice({
         //         state.deleteStatus = IDLE
         //     })
     }
-})
-
-export default peopleSlice.reducer
+});

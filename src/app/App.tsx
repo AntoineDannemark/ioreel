@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
-import ProtectedRoute, { ProtectedRouteProps } from "../ProtectedRoute";
+import ProtectedRoute, {
+  ProtectedRouteProps,
+} from "../features/User/ProtectedRoute";
 import {
   IonApp,
   IonRouterOutlet,
@@ -23,6 +25,8 @@ import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
 import { useAppContext, dbInitError } from "../context/Context";
 
+import Login from "../features/User/Login";
+import Endpoint from "../features/User/Endpoint";
 import People from "../pages/People";
 import Units from "../pages/Units";
 
@@ -71,14 +75,10 @@ const App: React.FC = () => {
   const defaultProtectedRouteProps: ProtectedRouteProps = {
     isAuthenticated: true,
     authenticationPath: "/login",
-    hasApiEndpoint: !!true,
+    hasApiEndpoint: false,
     // hasApiEndpoint: !!dbType,
     getApiEndpointPath: "/endpoint",
   };
-
-  useEffect(() => {
-    console.log(dbType);
-  }, [dbType]);
 
   // Init DB at mount
   useEffect(() => {
@@ -88,18 +88,6 @@ const App: React.FC = () => {
     testDB(setDbReady, setDbInitError);
   }, [setDbInitError, setDbReady]);
 
-  const handleDbChange = async (isLocal: boolean) => {
-    const endpoint = isLocal ? "local" : "sls";
-    await window.api.utils.setEndpoint(endpoint, isPlatform("electron"));
-    setDbType(endpoint);
-  };
-
-  const getIsLocal = async () => {
-    const res = await window.api.utils.getEndpoint(isPlatform("electron"));
-
-    console.log(res);
-  };
-
   return (
     <IonApp>
       <Router>
@@ -107,18 +95,14 @@ const App: React.FC = () => {
           style={{
             height: "3rem",
             backgroundColor: "black",
+            color: "pink",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "row",
           }}
         >
-          <IonCheckbox
-            checked={dbType === "local"}
-            onIonChange={(e) => handleDbChange(e.detail.checked)}
-          />
-          <p style={{ margin: "1rem", color: "white" }}>{dbType}</p>
-          <IonButton onClick={getIsLocal}>TEST</IonButton>
+          Bonjour m'fi
         </IonHeader>
         <IonContent>
           <IonTabs>
@@ -131,6 +115,8 @@ const App: React.FC = () => {
               />
               <Route exact path="/units" component={Units} />
               <Route exact path="/" render={() => <Redirect to="/people" />} />
+              <Route exact path="/login" component={Login} />
+              <Route exact path="/endpoint" component={Endpoint} />
             </IonRouterOutlet>
             <IonTabBar slot={"bottom"}>
               <IonTabButton tab="people" href="/people">

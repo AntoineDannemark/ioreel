@@ -7,10 +7,10 @@ import {
   createPerson,
   updatePerson,
   deletePerson,
-} from "../Features/people/peopleSlice";
+} from "../features/People/peopleSlice";
 
-import PersonForm from "../Features/people/PersonForm";
-import PeopleList from "../Features/people/PeopleList";
+import PersonForm from "../features/People/PersonForm";
+import PeopleList from "../features/People/PeopleList";
 
 import { IonContent, IonAlert, IonPage } from "@ionic/react";
 import { IPerson } from "../api/person";

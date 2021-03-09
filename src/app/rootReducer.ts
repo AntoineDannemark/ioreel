@@ -1,9 +1,11 @@
-import { combineReducers } from 'redux'
+import { combineReducers } from 'redux';
 
-import peopleReducer from '../Features/people/peopleSlice'
+import { userSlice } from '../features/User/userSlice';
+import { peopleSlice } from '../features/People/peopleSlice';
 
 const rootReducer = combineReducers({
-    people: peopleReducer
+    user: userSlice.reducer,
+    people: peopleSlice.reducer,
 })
 
 export type RootState = ReturnType<typeof rootReducer>
