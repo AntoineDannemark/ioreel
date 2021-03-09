@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
+import ProtectedRoute, { ProtectedRouteProps } from "../ProtectedRoute";
 import {
   IonApp,
   IonRouterOutlet,
@@ -67,6 +68,18 @@ const testDB = async (
 const App: React.FC = () => {
   const { dbType, setDbType, setDbReady, setDbInitError } = useAppContext();
 
+  const defaultProtectedRouteProps: ProtectedRouteProps = {
+    isAuthenticated: true,
+    authenticationPath: "/login",
+    hasApiEndpoint: !!true,
+    // hasApiEndpoint: !!dbType,
+    getApiEndpointPath: "/endpoint",
+  };
+
+  useEffect(() => {
+    console.log(dbType);
+  }, [dbType]);
+
   // Init DB at mount
   useEffect(() => {
     if (!isPlatform("electron")) {
@@ -110,7 +123,12 @@ const App: React.FC = () => {
         <IonContent>
           <IonTabs>
             <IonRouterOutlet>
-              <Route exact path="/people" component={People} />
+              <ProtectedRoute
+                {...defaultProtectedRouteProps}
+                exact
+                path="/people"
+                component={People}
+              />
               <Route exact path="/units" component={Units} />
               <Route exact path="/" render={() => <Redirect to="/people" />} />
             </IonRouterOutlet>
