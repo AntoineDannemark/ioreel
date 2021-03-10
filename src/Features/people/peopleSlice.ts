@@ -74,7 +74,7 @@ export const peopleSlice = createSlice({
                 state.fetchStatus = PENDING
                 state.fetchError = null
             })
-            .addCase(fetchPeople.fulfilled, (state, { payload }: PayloadAction<Person[]>) => {
+            .addCase(fetchPeople.fulfilled, (state, { payload }: PayloadAction<any>) => {
                 state.list = payload
                 state.fetchStatus = IDLE
             })

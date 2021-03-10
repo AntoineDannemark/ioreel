@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   IonButton,
@@ -11,32 +11,32 @@ import {
   IonRadio,
   IonRadioGroup,
 } from "@ionic/react";
-import {
-  DbHosting,
-  SlsEndpoint,
-  setEndpoint as setUserEndpoint,
-} from "./userSlice";
-import { useAppDispatch } from "../../app/store";
+import { setEndpoint as setUserEndpoint } from "./userSlice";
+import { useHistory } from "react-router-dom";
+import { useAppDispatch, useTypedSelector } from "../../app/store";
+import type { Endpoint as APIEndpoint } from "../../storage/types";
 
 // Will include a selector allowing to chose between a local DB and a hosted DB
 // In case of hosted DB, will show an input to type in the url
 
-type FormData = {
-  dbHosting: DbHosting;
-  slsEndpoint: SlsEndpoint;
-};
-
 const Endpoint: React.FC = (props: any) => {
   const dispatch = useAppDispatch();
-  const { register, handleSubmit, watch, errors } = useForm<FormData>();
-
-  const [hosting, setHosting] = useState<string | undefined>(undefined);
+  const { register, handleSubmit, watch, errors } = useForm();
+  const history = useHistory();
+  const { endpoint } = useTypedSelector((state) => state.user);
+  //   const [hosting, setHosting] = useState<string | undefined>(undefined);
 
   const onSubmit = handleSubmit(({ dbHosting, slsEndpoint }) => {
-    console.log(dbHosting, slsEndpoint);
-    let endpoint = { dbHosting, slsEndpoint };
-    dispatch(setUserEndpoint(endpoint));
+    dispatch(setUserEndpoint(dbHosting === "local" ? dbHosting : slsEndpoint));
   });
+
+  useEffect(() => {
+    console.log("endpoint", endpoint);
+    if (!!endpoint) {
+      console.log("history.push");
+      history.push("/");
+    }
+  }, [endpoint, history]);
 
   const dbHosting = watch("dbHosting", props.dbHosting);
 
@@ -48,7 +48,7 @@ const Endpoint: React.FC = (props: any) => {
             value={dbHosting}
             name="dbHosting"
             ref={register}
-            onIonChange={(e) => setHosting(e.detail.value)}
+            // onIonChange={(e) => setHosting(e.detail.value)}
           >
             <IonListHeader>
               <IonLabel>Select database hosting</IonLabel>

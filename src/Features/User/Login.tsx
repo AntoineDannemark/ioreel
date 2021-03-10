@@ -1,4 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { useHistory } from "react-router-dom";
+import { useAppDispatch, useTypedSelector } from "../../app/store";
+import { login } from "./userSlice";
 import {
   IonButton,
   IonContent,
@@ -7,9 +11,6 @@ import {
   IonLabel,
   IonPage,
 } from "@ionic/react";
-import { login } from "./userSlice";
-import { useAppDispatch } from "../../app/store";
-import { useForm } from "react-hook-form";
 
 type FormData = {
   email: string;
@@ -19,10 +20,20 @@ type FormData = {
 const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit, watch, errors } = useForm<FormData>();
+  const history = useHistory();
+  const { connected } = useTypedSelector((state) => state.user);
 
   const onSubmit = handleSubmit(({ email, password }) => {
     dispatch(login({ email, password }));
   });
+
+  useEffect(() => {
+    console.log("connected", connected);
+    if (connected) {
+      console.log("history.push");
+      history.push("/");
+    }
+  }, [connected, history]);
 
   return (
     <IonPage>

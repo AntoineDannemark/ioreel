@@ -9,7 +9,8 @@ import ContextProvider from "./context/Context";
 import * as serviceWorker from "./serviceWorker";
 import { defineCustomElements } from "@ionic/pwa-elements/loader";
 
-import type { Api } from "./api/index";
+import type { Api } from "./api";
+import type { StorageApi } from "./storage";
 
 // interface log {
 //   type: "info" | "warn" | "error";
@@ -17,11 +18,11 @@ import type { Api } from "./api/index";
 // }
 
 // TODO This should (probably) be declared elsewhere
-// + interface the api + replace 'any'
 // https://stackoverflow.com/questions/56457935/typescript-error-property-x-does-not-exist-on-type-window/56458070
 declare global {
   interface Window {
     api: Api;
+    storageApi: StorageApi;
   }
 }
 

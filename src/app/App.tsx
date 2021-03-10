@@ -22,6 +22,8 @@ import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 // import { SQLite } from "@ionic-native/sqlite";
 
 import { useAppContext, dbInitError } from "../context/Context";
+import { useAppDispatch, useTypedSelector } from "./store";
+import { setEndpoint } from "../features/User/userSlice";
 
 import Login from "../features/User/Login";
 import Endpoint from "../features/User/Endpoint";
@@ -69,22 +71,53 @@ const testDB = async (
 
 const App: React.FC = () => {
   const { dbType, setDbType, setDbReady, setDbInitError } = useAppContext();
+  const { connected, endpoint } = useTypedSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
   const defaultProtectedRouteProps: ProtectedRouteProps = {
-    isAuthenticated: false,
+    isAuthenticated: connected,
     authenticationPath: "/login",
-    hasApiEndpoint: false,
-    // hasApiEndpoint: !!dbType,
+    hasApiEndpoint: !!endpoint,
     getApiEndpointPath: "/endpoint",
   };
 
-  // Init DB at mount
+  const getUserAPIEndpoint = async () => {
+    return await window.storageApi.getEndpoint(isPlatform("electron"));
+  };
+
   useEffect(() => {
+    // If we're not in Electron, there is no storageApi in window
     if (!isPlatform("electron")) {
-      window.api = require("../api").default;
+      // Here we should load only the basic version of the api
+      window.storageApi = require("../storage").default;
     }
-    testDB(setDbReady, setDbInitError);
-  }, [setDbInitError, setDbReady]);
+
+    // Now that we have an api, check if we have an endpoint and set it in redux
+    getUserAPIEndpoint().then((ep) => {
+      if (!endpoint && !!ep) {
+        dispatch(setEndpoint(ep));
+      }
+    });
+  }, [dispatch, endpoint]);
+
+  useEffect(() => {
+    if (!!endpoint) {
+      if (!isPlatform("electron")) {
+        window.api = require("../api").default;
+      }
+      testDB(setDbReady, setDbInitError);
+    }
+    // TODO probably refactor endpoint because we are watching an object!!
+  }, [endpoint, setDbInitError, setDbReady]);
+
+  //   // Init DB at mount
+  //   useEffect(() => {
+  //     if (!isPlatform("electron")) {
+  //       window.storageApi = require("../storage").default;
+  //       //   window.api = require("../api").default;
+  //     }
+  //     testDB(setDbReady, setDbInitError);
+  //   }, [setDbInitError, setDbReady]);
 
   return (
     <IonApp>

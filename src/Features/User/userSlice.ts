@@ -6,18 +6,9 @@ import {
 import { isPlatform } from '@ionic/react';
 import { 
     ASYNC_ACTIONS_STATUS, 
-    DB_HOSTING 
 } from '../../core/constants';
-
+import type { Endpoint } from '../../storage/types';
 const { IDLE, PENDING } = ASYNC_ACTIONS_STATUS;
-const { LOCAL, SLS } = DB_HOSTING;
-
-export type DbHosting = typeof LOCAL | typeof SLS | undefined;
-export type SlsEndpoint = string | undefined;
-export type Endpoint = {
-    dbHosting: DbHosting;
-    slsEndpoint: SlsEndpoint;
-}
 
 export interface Credentials {
     email: string;
@@ -34,6 +25,7 @@ interface UserState {
     email: string | undefined;
     loginStatus: typeof IDLE | typeof PENDING;
     loginError: string | null,
+    connected: boolean;
     endpoint: Endpoint | undefined;
     setEndpointStatus: typeof IDLE | typeof PENDING;
     setEndpointError: string | null;
@@ -47,6 +39,7 @@ const initialState: UserState = {
     email: undefined,
     loginStatus: IDLE,
     loginError: null,
+    connected: false,
     endpoint: undefined,
     setEndpointStatus: IDLE,
     setEndpointError: null,
@@ -60,7 +53,8 @@ const initialState: UserState = {
 export const setEndpoint = createAsyncThunk(
     'user/setEndpoint',
     async (endpoint: Endpoint) => {
-        await window.api.utils.setEndpoint(endpoint, isPlatform("electron"));
+        await window.storageApi.setEndpoint(endpoint, isPlatform("electron"));
+        // await window.api.utils.setEndpoint(endpoint, isPlatform("electron"));
         return endpoint;
     }
 )
@@ -89,6 +83,7 @@ export const userSlice = createSlice({
             .addCase(login.fulfilled, (state, { payload }: PayloadAction<User>) => {
                 state.username = payload.username;
                 state.email = payload.email;
+                state.connected = true;
                 state.loginStatus = IDLE;
             })
             .addCase(login.rejected, (state, { error }) => {
