@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { Redirect, Route } from "react-router-dom";
 import ProtectedRoute, {
   ProtectedRouteProps,
@@ -14,9 +14,7 @@ import {
   IonIcon,
   IonLabel,
   IonHeader,
-  IonCheckbox,
   IonContent,
-  IonButton,
 } from "@ionic/react";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
@@ -73,7 +71,7 @@ const App: React.FC = () => {
   const { dbType, setDbType, setDbReady, setDbInitError } = useAppContext();
 
   const defaultProtectedRouteProps: ProtectedRouteProps = {
-    isAuthenticated: true,
+    isAuthenticated: false,
     authenticationPath: "/login",
     hasApiEndpoint: false,
     // hasApiEndpoint: !!dbType,
@@ -107,6 +105,7 @@ const App: React.FC = () => {
         <IonContent>
           <IonTabs>
             <IonRouterOutlet>
+              <Route exact path="/" render={() => <Redirect to="/people" />} />
               <ProtectedRoute
                 {...defaultProtectedRouteProps}
                 exact
@@ -114,7 +113,6 @@ const App: React.FC = () => {
                 component={People}
               />
               <Route exact path="/units" component={Units} />
-              <Route exact path="/" render={() => <Redirect to="/people" />} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/endpoint" component={Endpoint} />
             </IonRouterOutlet>
