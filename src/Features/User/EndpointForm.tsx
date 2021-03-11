@@ -14,12 +14,12 @@ import {
 import { setEndpoint as setUserEndpoint } from "./userSlice";
 import { useHistory } from "react-router-dom";
 import { useAppDispatch, useTypedSelector } from "../../app/store";
-import type { Endpoint as APIEndpoint } from "../../storage/types";
+// import type { Endpoint } from "../../storage/types";
 
 // Will include a selector allowing to chose between a local DB and a hosted DB
 // In case of hosted DB, will show an input to type in the url
 
-const Endpoint: React.FC = (props: any) => {
+const EndpointForm: React.FC = (props: any) => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit, watch, errors } = useForm();
   const history = useHistory();
@@ -27,7 +27,12 @@ const Endpoint: React.FC = (props: any) => {
   //   const [hosting, setHosting] = useState<string | undefined>(undefined);
 
   const onSubmit = handleSubmit(({ dbHosting, slsEndpoint }) => {
-    dispatch(setUserEndpoint(dbHosting === "local" ? dbHosting : slsEndpoint));
+    dispatch(
+      setUserEndpoint({
+        endpoint: dbHosting === "local" ? dbHosting : slsEndpoint,
+        shouldSetInStorage: true,
+      })
+    );
   });
 
   useEffect(() => {
@@ -36,7 +41,8 @@ const Endpoint: React.FC = (props: any) => {
       console.log("history.push");
       history.push("/");
     }
-  }, [endpoint, history]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [endpoint]);
 
   const dbHosting = watch("dbHosting", props.dbHosting);
 
@@ -62,19 +68,19 @@ const Endpoint: React.FC = (props: any) => {
               <IonRadio slot="start" value="sls" />
             </IonItem>
           </IonRadioGroup>
-          {dbHosting === "sls" ? (
-            <IonItem>
-              <IonLabel position="floating">Serverless endpoint</IonLabel>
-              <IonInput
-                name="slsEndpoint"
-                ref={
-                  register
-                  //   hosting === "sls" ? register({ required: true }) : register
-                }
-                clearInput
-              ></IonInput>
-            </IonItem>
-          ) : null}
+          {/* {dbHosting === "sls" ? ( */}
+          <IonItem>
+            <IonLabel position="floating">Serverless endpoint</IonLabel>
+            <IonInput
+              name="slsEndpoint"
+              ref={
+                register
+                //   hosting === "sls" ? register({ required: true }) : register
+              }
+              clearInput
+            ></IonInput>
+          </IonItem>
+          {/* ) : null} */}
           <IonButton type="submit">submit</IonButton>
         </form>
       </IonContent>
@@ -82,4 +88,4 @@ const Endpoint: React.FC = (props: any) => {
   );
 };
 
-export default Endpoint;
+export default EndpointForm;
