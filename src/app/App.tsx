@@ -70,7 +70,7 @@ const testDB = async (
 };
 
 const App: React.FC = () => {
-  const { dbType, setDbType, setDbReady, setDbInitError } = useAppContext();
+  const { setDbReady, setDbInitError } = useAppContext();
   const { connected, endpoint } = useTypedSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
