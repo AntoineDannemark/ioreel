@@ -58,7 +58,6 @@ const testDB = async (
   dbReadySetter: React.Dispatch<React.SetStateAction<boolean>>,
   errorSetter: React.Dispatch<React.SetStateAction<dbInitError | null>>
 ) => {
-  console.log("hit testDB");
   const res = await window.api.utils.testConnection();
 
   if (res.dbReady) {
@@ -84,7 +83,6 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("hit app useEffect");
     // If we're not in Electron, there is no storageApi in window
     if (!isPlatform("electron")) {
       // Here we should load only the basic version of the api
@@ -94,7 +92,6 @@ const App: React.FC = () => {
     const setUserAPIEndpoint = async () => {
       const ep = await window.storageApi.getEndpoint(isPlatform("electron"));
       if (!endpoint && !!ep) {
-        console.log("@App - will setEndpoint in redux");
         dispatch(setEndpoint({ endpoint: ep, shouldSetInStorage: false }));
       }
     };
@@ -105,12 +102,9 @@ const App: React.FC = () => {
   }, [dispatch, endpoint]);
 
   useEffect(() => {
-    console.log("hit app useEffect 2, endpoint = ", endpoint);
     // If we have an endpoint, we can set the api in the window object
     if (!!endpoint) {
-      console.log("hit app useEffect 2 if 1");
       if (!isPlatform("electron")) {
-        console.log("hit app useEffect 2 if 2");
         window.api = require("../api").default;
       }
       testDB(setDbReady, setDbInitError);
