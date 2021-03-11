@@ -2,7 +2,7 @@
 // https://stackoverflow.com/questions/47747754/how-to-rewrite-the-protected-private-route-using-typescript-and-react-router-4-a
 
 import React from "react";
-import { Route, RouteProps, Redirect } from "react-router-dom";
+import { Route, RouteProps, Redirect, useHistory } from "react-router-dom";
 
 export interface ProtectedRouteProps extends RouteProps {
   isAuthenticated: boolean;
@@ -12,6 +12,8 @@ export interface ProtectedRouteProps extends RouteProps {
 }
 
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
+  const history = useHistory();
+
   let redirectPath = "";
 
   if (!props.isAuthenticated) {
@@ -22,7 +24,8 @@ export const ProtectedRoute: React.FC<ProtectedRouteProps> = (props) => {
     redirectPath = props.getApiEndpointPath;
   }
 
-  if (redirectPath) {
+  if (redirectPath && redirectPath !== history.location.pathname) {
+    console.log("will redirect to ", redirectPath);
     const renderComponent = () => <Redirect to={{ pathname: redirectPath }} />;
     return <Route {...props} component={renderComponent} render={undefined} />;
   } else {
