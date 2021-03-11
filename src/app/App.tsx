@@ -15,6 +15,7 @@ import {
   IonLabel,
   IonHeader,
   IonContent,
+  IonButton,
 } from "@ionic/react";
 import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
@@ -23,10 +24,10 @@ import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 
 import { useAppContext, dbInitError } from "../context/Context";
 import { useAppDispatch, useTypedSelector } from "./store";
-import { setEndpoint } from "../features/User/userSlice";
+import { setEndpoint, clearEndpoint } from "../features/User/userSlice";
 
 import Login from "../features/User/Login";
-import Endpoint from "../features/User/Endpoint";
+import EndpointForm from "../features/User/EndpointForm";
 import People from "../pages/People";
 import Units from "../pages/Units";
 
@@ -57,6 +58,7 @@ const testDB = async (
   dbReadySetter: React.Dispatch<React.SetStateAction<boolean>>,
   errorSetter: React.Dispatch<React.SetStateAction<dbInitError | null>>
 ) => {
+  console.log("hit testDB");
   const res = await window.api.utils.testConnection();
 
   if (res.dbReady) {
@@ -81,43 +83,43 @@ const App: React.FC = () => {
     getApiEndpointPath: "/endpoint",
   };
 
-  const getUserAPIEndpoint = async () => {
-    return await window.storageApi.getEndpoint(isPlatform("electron"));
-  };
-
   useEffect(() => {
+    console.log("hit app useEffect");
     // If we're not in Electron, there is no storageApi in window
     if (!isPlatform("electron")) {
       // Here we should load only the basic version of the api
       window.storageApi = require("../storage").default;
     }
 
-    // Now that we have an api, check if we have an endpoint and set it in redux
-    getUserAPIEndpoint().then((ep) => {
+    const setUserAPIEndpoint = async () => {
+      const ep = await window.storageApi.getEndpoint(isPlatform("electron"));
       if (!endpoint && !!ep) {
-        dispatch(setEndpoint(ep));
+        console.log("@App - will setEndpoint in redux");
+        dispatch(setEndpoint({ endpoint: ep, shouldSetInStorage: false }));
       }
-    });
+    };
+
+    // Now that we have the storageApi, check if we have an endpoint and set it in redux
+    // If we don't we should be redirected to the endpoint form
+    setUserAPIEndpoint();
   }, [dispatch, endpoint]);
 
   useEffect(() => {
+    console.log("hit app useEffect 2, endpoint = ", endpoint);
+    // If we have an endpoint, we can set the api in the window object
     if (!!endpoint) {
+      console.log("hit app useEffect 2 if 1");
       if (!isPlatform("electron")) {
+        console.log("hit app useEffect 2 if 2");
         window.api = require("../api").default;
       }
       testDB(setDbReady, setDbInitError);
     }
-    // TODO probably refactor endpoint because we are watching an object!!
   }, [endpoint, setDbInitError, setDbReady]);
 
-  //   // Init DB at mount
-  //   useEffect(() => {
-  //     if (!isPlatform("electron")) {
-  //       window.storageApi = require("../storage").default;
-  //       //   window.api = require("../api").default;
-  //     }
-  //     testDB(setDbReady, setDbInitError);
-  //   }, [setDbInitError, setDbReady]);
+  const handleClearEndpoint = () => {
+    dispatch(clearEndpoint());
+  };
 
   return (
     <IonApp>
@@ -134,11 +136,12 @@ const App: React.FC = () => {
           }}
         >
           Bonjour m'fi
+          <IonButton onClick={handleClearEndpoint}>CLEAR ENDPOINT</IonButton>
         </IonHeader>
         <IonContent>
           <IonTabs>
             <IonRouterOutlet>
-              <Route exact path="/" render={() => <Redirect to="/people" />} />
+              {/* <Route exact path="/" render={() => <Redirect to="/people" />} /> */}
               <ProtectedRoute
                 {...defaultProtectedRouteProps}
                 exact
@@ -147,7 +150,7 @@ const App: React.FC = () => {
               />
               <Route exact path="/units" component={Units} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/endpoint" component={Endpoint} />
+              <Route exact path="/endpoint" component={EndpointForm} />
             </IonRouterOutlet>
             <IonTabBar slot={"bottom"}>
               <IonTabButton tab="people" href="/people">
