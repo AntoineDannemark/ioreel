@@ -1,9 +1,9 @@
+import { isPlatform } from '@ionic/react';
 import { 
     createSlice, 
     createAsyncThunk,
     PayloadAction
 } from '@reduxjs/toolkit';
-import { isPlatform } from '@ionic/react';
 import { 
     ASYNC_ACTIONS_STATUS, 
 } from '../../core/constants';
@@ -29,7 +29,8 @@ interface UserState {
     endpoint: Endpoint | undefined;
     setEndpointStatus: typeof IDLE | typeof PENDING;
     setEndpointError: string | null;
-
+    clearEndpointStatus: typeof IDLE | typeof PENDING;
+    clearEndpointError: string | null;
     // signupStatus: typeof IDLE | typeof PENDING;
     // signupError: string | null;
 }
@@ -43,6 +44,8 @@ const initialState: UserState = {
     endpoint: undefined,
     setEndpointStatus: IDLE,
     setEndpointError: null,
+    clearEndpointStatus: IDLE,
+    clearEndpointError: null,
 }
 
 // export const signup = createAsyncThunk(
@@ -52,10 +55,17 @@ const initialState: UserState = {
 
 export const setEndpoint = createAsyncThunk(
     'user/setEndpoint',
-    async (endpoint: Endpoint) => {
-        await window.storageApi.setEndpoint(endpoint, isPlatform("electron"));
-        // await window.api.utils.setEndpoint(endpoint, isPlatform("electron"));
+    async ({endpoint, shouldSetInStorage = true}: {endpoint: Endpoint, shouldSetInStorage: boolean}) => {
+        if (!endpoint) return;
+        shouldSetInStorage && await window.storageApi.setEndpoint(endpoint, isPlatform("electron"));        
         return endpoint;
+    }
+)
+
+export const clearEndpoint = createAsyncThunk(
+    'user/clearEndpoint',
+    async() => {
+        return await window.storageApi.clearEndpoint(isPlatform("electron"));
     }
 )
 
@@ -101,6 +111,18 @@ export const userSlice = createSlice({
             .addCase(setEndpoint.rejected, (state, { error }) => {
                 state.setEndpointError = error.toString();
                 state.setEndpointStatus = IDLE;
+            })
+            .addCase(clearEndpoint.pending, state => {
+                state.clearEndpointError = null;
+                state.clearEndpointStatus = PENDING;
+            })
+            .addCase(clearEndpoint.fulfilled, (state, { payload }: PayloadAction<boolean>) => {
+                state.endpoint = payload === true ? undefined : state.endpoint;
+                state.clearEndpointStatus = IDLE;
+            })
+            .addCase(clearEndpoint.rejected, (state, { error }) => {
+                state.clearEndpointError = error.toString();
+                state.clearEndpointStatus = IDLE;
             })
     },
 })
