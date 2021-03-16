@@ -21,19 +21,19 @@ const Login: React.FC = () => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit, watch, errors } = useForm<FormData>();
   const history = useHistory();
-  const { connected } = useTypedSelector((state) => state.user);
+  const { isAuthenticated } = useTypedSelector((state) => state.user);
 
   const onSubmit = handleSubmit(({ email, password }) => {
     dispatch(login({ email, password }));
   });
 
   useEffect(() => {
-    console.log("connected", connected);
-    if (connected) {
+    console.log("connected", isAuthenticated);
+    if (isAuthenticated) {
       console.log("history.push");
       history.push("/");
     }
-  }, [connected, history]);
+  }, [isAuthenticated, history]);
 
   return (
     <IonPage>

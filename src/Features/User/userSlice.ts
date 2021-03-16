@@ -25,7 +25,7 @@ interface UserState {
     email: string | undefined;
     loginStatus: typeof IDLE | typeof PENDING;
     loginError: string | null,
-    connected: boolean;
+    isAuthenticated: boolean;
     endpoint: Endpoint | undefined;
     setEndpointStatus: typeof IDLE | typeof PENDING;
     setEndpointError: string | null;
@@ -40,7 +40,7 @@ const initialState: UserState = {
     email: undefined,
     loginStatus: IDLE,
     loginError: null,
-    connected: false,
+    isAuthenticated: false,
     endpoint: undefined,
     setEndpointStatus: IDLE,
     setEndpointError: null,
@@ -93,7 +93,7 @@ export const userSlice = createSlice({
             .addCase(login.fulfilled, (state, { payload }: PayloadAction<User>) => {
                 state.username = payload.username;
                 state.email = payload.email;
-                state.connected = true;
+                state.isAuthenticated = true;
                 state.loginStatus = IDLE;
             })
             .addCase(login.rejected, (state, { error }) => {
