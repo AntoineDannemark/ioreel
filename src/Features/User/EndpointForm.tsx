@@ -14,17 +14,12 @@ import {
 import { setEndpoint as setUserEndpoint } from "./userSlice";
 import { useHistory } from "react-router-dom";
 import { useAppDispatch, useTypedSelector } from "../../app/store";
-// import type { Endpoint } from "../../storage/types";
-
-// Will include a selector allowing to chose between a local DB and a hosted DB
-// In case of hosted DB, will show an input to type in the url
 
 const EndpointForm: React.FC = (props: any) => {
   const dispatch = useAppDispatch();
   const { register, handleSubmit, watch, errors } = useForm();
   const history = useHistory();
   const { endpoint } = useTypedSelector((state) => state.user);
-  //   const [hosting, setHosting] = useState<string | undefined>(undefined);
 
   const onSubmit = handleSubmit(({ dbHosting, slsEndpoint }) => {
     dispatch(
@@ -50,12 +45,7 @@ const EndpointForm: React.FC = (props: any) => {
     <IonPage>
       <IonContent>
         <form onSubmit={onSubmit}>
-          <IonRadioGroup
-            value={dbHosting}
-            name="dbHosting"
-            ref={register}
-            // onIonChange={(e) => setHosting(e.detail.value)}
-          >
+          <IonRadioGroup value={dbHosting} name="dbHosting" ref={register}>
             <IonListHeader>
               <IonLabel>Select database hosting</IonLabel>
             </IonListHeader>
