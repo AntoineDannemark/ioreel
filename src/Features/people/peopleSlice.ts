@@ -78,8 +78,8 @@ export const peopleSlice = createSlice({
                 peopleAdapter.addOne(state, action.payload);
                 state.loading = IDLE;
             })
-            .addCase(createPerson.rejected, (state, { payload }: PayloadAction<any>) => {
-                state.error = payload.message;
+            .addCase(createPerson.rejected, (state, { error }) => {                
+                state.error = error.message || null ;
                 state.loading = IDLE;
             })
             .addCase(updatePerson.fulfilled, () => {
