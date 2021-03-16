@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
-import { Route } from "react-router-dom";
-import ProtectedRoute, {
-  ProtectedRouteProps,
-} from "../features/User/ProtectedRoute";
+import { Route, Redirect } from "react-router-dom";
+import { ProtectedRoute } from "../commons/ProtectedRoute";
+// import ProtectedRoute, {
+//   ProtectedRouteProps,
+// } from "../features/User/ProtectedRoute";
 import {
   IonApp,
   IonRouterOutlet,
@@ -25,6 +26,7 @@ import { IonReactRouter, IonReactHashRouter } from "@ionic/react-router";
 import { useAppContext, dbInitError } from "../context/Context";
 import { useAppDispatch, useTypedSelector } from "./store";
 import { setEndpoint, clearEndpoint } from "../features/User/userSlice";
+import { clearPeopleStore } from "../features/People/peopleSlice";
 
 import Login from "../features/User/Login";
 import EndpointForm from "../features/User/EndpointForm";
@@ -72,15 +74,8 @@ const testDB = async (
 
 const App: React.FC = () => {
   const { setDbReady, setDbInitError } = useAppContext();
-  const { connected, endpoint } = useTypedSelector((state) => state.user);
+  const { endpoint } = useTypedSelector((state) => state.user);
   const dispatch = useAppDispatch();
-
-  const defaultProtectedRouteProps: ProtectedRouteProps = {
-    isAuthenticated: connected,
-    authenticationPath: "/login",
-    hasApiEndpoint: !!endpoint,
-    getApiEndpointPath: "/endpoint",
-  };
 
   useEffect(() => {
     // If we're not in Electron, there is no storageApi in window
@@ -91,6 +86,7 @@ const App: React.FC = () => {
 
     const setUserAPIEndpoint = async () => {
       const ep = await window.storageApi.getEndpoint(isPlatform("electron"));
+      // If we don't have an endpoint in the store but
       if (!endpoint && !!ep) {
         dispatch(setEndpoint({ endpoint: ep, shouldSetInStorage: false }));
       }
@@ -105,13 +101,14 @@ const App: React.FC = () => {
     // If we have an endpoint, we can set the api in the window object
     if (!!endpoint) {
       if (!isPlatform("electron")) {
-        window.api = require("../api").default;
+        window.api = require("../api").getApi(endpoint);
       }
       testDB(setDbReady, setDbInitError);
     }
   }, [endpoint, setDbInitError, setDbReady]);
 
   const handleClearEndpoint = () => {
+    dispatch(clearPeopleStore());
     dispatch(clearEndpoint());
   };
 
@@ -125,19 +122,21 @@ const App: React.FC = () => {
             color: "pink",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            justifyContent: "space-evenly",
             flexDirection: "row",
           }}
         >
-          Bonjour m'fi
-          <IonButton onClick={handleClearEndpoint}>CLEAR ENDPOINT</IonButton>
+          {`Current API Endpoint: ${endpoint}`}
+          <IonButton onClick={handleClearEndpoint} disabled={!endpoint}>
+            CLEAR
+          </IonButton>
         </IonHeader>
         <IonContent>
           <IonTabs>
             <IonRouterOutlet>
-              {/* <Route exact path="/" render={() => <Redirect to="/people" />} /> */}
+              <Route exact path="/" render={() => <Redirect to="/people" />} />
               <ProtectedRoute
-                {...defaultProtectedRouteProps}
+                // {...defaultProtectedRouteProps}
                 exact
                 path="/people"
                 component={People}
