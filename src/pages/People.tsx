@@ -7,6 +7,7 @@ import {
   createPerson,
   updatePerson,
   deletePerson,
+  selectAllPeople,
 } from "../features/People/peopleSlice";
 
 import PersonForm from "../features/People/PersonForm";
@@ -17,7 +18,7 @@ import { IPerson } from "../api/person";
 
 const People = () => {
   const dispatch = useAppDispatch();
-  const people = useTypedSelector((state) => state.people.list);
+  const people = useTypedSelector(selectAllPeople);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [editValues, setEditValues] = useState<IPerson | null>(null);
