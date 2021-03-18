@@ -140,8 +140,17 @@ On peut tester l'application sur un appareil virtuel (plusieurs modèles disponi
 
 ## Typescript
 
-💡 Pour faciliter le dévelopement, activer la validation dans VSCode ce paramètre `"typescript.validate.enable": true,` dans votre settings.json. L'éditeur renseignera directement les erreurs sans devoir passer par le compilateur.
+💡 Pour faciliter le dévelopement, activer la validation dans VSCode avec le paramètre `"typescript.validate.enable": true,` dans votre settings.json. L'éditeur renseignera directement les erreurs sans devoir passer par le compilateur.
 
 💡 Pour utiliser l'autocomplétion résultant de l'utilisation de TS, utiliser `CTRL + space`
 
 💡 Pour connaitre le type d'une variable, la survoler avec la souris (chercher ce qui vient après le ":")
+
+## Window.api
+
+Les interactions avec la base de données se font depuis le client via window.api. Par exemple pour créer une personne: `window.api.person.create({ ...person }))`
+Selon les cas d'utilisation, la manière d'exposer cette API varie.
+
+Dans le cas d'**Electron**, cette API est exposée depuis le fichier /electron/preloader.js via la fonction `contextBridge.exposeInMainWorld('api', { ...api })`.
+
+[electron diagram](https://user-images.githubusercontent.com/44195889/111613087-7035de00-87de-11eb-992b-03c08b78a13f.png)
